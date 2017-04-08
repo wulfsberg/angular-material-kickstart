@@ -39,6 +39,7 @@ Step into the newly generated folder and add the following dependencies:
     npm install @angular/animations --save
     npm install web-animations-js --save
     npm install sanitize.css --save
+    npm install hammerjs --save
     
 and possibly
 
@@ -64,6 +65,9 @@ so-sensible-they-are-de-facto-standard rules on top of the normalization.
 Notably, this includes using the border-box model and collapsing table borders.
 It is less of an issue when using the Material project, but is still a nice help when doing other CSS work.
 
+[`hammerjs`](http://hammerjs.github.io/) provides gesture support, such as swipe and pinch. A couple of the Material
+components support this, so we include the library to get full functionality.
+
 `intl` is a polyfill for the ECMAScript internationalization API, to handle things like date and number formats.
 It is widely supported in modern browsers, only lacking in IE10, Safari 9 or Opera Mini, so you may or may not need it,
 depending on your target.
@@ -84,6 +88,15 @@ The animations module needs to be imported in the `src/app/app.module.ts`:
     ]
     ...
     
+Enable gestures
+---------------
+Like the animations, the Hammer.js gesture support needs to be explicitly imported to be activated, so add this to
+the `src/app/app.module.ts`:
+
+    ...
+    import 'hammerjs';
+    ...
+
 Set locale
 ----------
 To ensure that locale-specific pipes (such as date or number format) use the correct locale, add a `LOCALE_ID`
@@ -162,4 +175,5 @@ Useful packages
 ---------------
  * [`moment.js`](http://momentjs.com/) is highly useful for doing date manipulation and parsing/formatting,
  in particular if you also need to handle time zones (using [`moment-timezone.js`](http://momentjs.com/timezone/)),
- and it will feel familiar if you're used to Joda-Time or Java 8's date/time API. 
+ and it will feel familiar if you're used to Joda-Time or Java 8's date/time API.
+
