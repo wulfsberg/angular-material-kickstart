@@ -45,8 +45,6 @@ and possibly
 
     npm install intl --save
     
-TODO: Hammer.js
-    
 `language-service` provides feedback to compatible IDEs (notably Visual Studio and IntelliJ/WebStorm), allowing
 for Angular-specific suggestions.
 
