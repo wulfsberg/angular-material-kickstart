@@ -67,8 +67,8 @@ It is less of an issue when using the Material project, but is still a nice help
 components support this, so we include the library to get full functionality.
 
 `intl` is a polyfill for the ECMAScript internationalization API, to handle things like date and number formats.
-It is widely supported in modern browsers, only lacking in IE10, Safari 9 or Opera Mini, so you may or may not need it,
-depending on your target.
+The standard API is widely supported in modern browsers, only lacking in IE10, Safari 9 or Opera Mini,
+so you may or may not need this polyfill, depending on your target.
 
 Enable polyfills
 ----------------
@@ -141,7 +141,9 @@ Open the `tsconfig.json` file and add the following options:
       "noImplicitThis": true,
       "noUnusedLocals": true,
       "noUnusedParameters": true,
+      "noFallthroughCasesInSwitch": true,
       "strictNullChecks": true,
+      "forceConsistentCasingInFileNames": true,
       "skipLibCheck": true,
       ...
     }
