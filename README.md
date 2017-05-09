@@ -24,8 +24,10 @@ make sure you have the latest version before using it to create a project.
 Create a project
 ----------------
 
-    ng new [project-name] --prefix [component-prefix] --style scss
+    ng new [project-name] --prefix=[component-prefix] --style=scss
     
+(**Note**: You may also want to add `--skip-git` if you use another source control system or prefer to initialize it in other ways).
+
 The `project-name` is, well, the project name. The `component-prefix` is a short prefix to component names,
 which is used when generating new components to avoid name collision between different libraries. This should typically
 be company/customer-specific, though in some cases a project may be large enough to warrant its own prefix.
