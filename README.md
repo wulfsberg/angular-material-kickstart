@@ -6,7 +6,7 @@ configuration, there are still a handful of choices and things to remember when 
 This README describes the way I set up a project. It is not meant as a tutorial for neither Angular, nor Angular-CLI,
 but as a cookbook/checklist for going from "nothing on the disk" to "project I can start actual development in".
 
-It currently matches Angular 4.0 and Material 2.0.0-beta.3.
+It currently matches Angular 4.1.1, Angular-CLI 1.1.0-beta.1 and Material 2.0.0-beta.3.
 
 Prerequisites
 -------------
@@ -16,7 +16,7 @@ from a central repository).
 
 Install the Angular CLI globally:
 
-    npm install @angular/cli -g
+    npm install @angular/cli@1.1.0-beta.1 -g
     
 Since the CLI is responsible for setting up a lot of tool packages and configuration files,
 make sure you have the latest version before using it to create a project.
@@ -34,7 +34,6 @@ We use SASS as the stylesheet language, in part because it works well with Mater
 
 Step into the newly generated folder and add the following dependencies:
 
-    npm install @angular/language-service --save-dev
     npm install @angular/material --save
     npm install @angular/animations --save
     npm install web-animations-js --save
@@ -45,9 +44,6 @@ and possibly
 
     npm install intl --save
     
-`language-service` provides feedback to compatible IDEs (notably Visual Studio and IntelliJ/WebStorm), allowing
-for Angular-specific suggestions.
-
 `material` is the [Angular implementation](https://material.angular.io/) of
 [Google's Material Design](https://material.io/guidelines/) and provides some elegant standard components.
 
@@ -134,17 +130,13 @@ Open the `tsconfig.json` file and add the following options:
     ...
     "compilerOptions": {
       ...
-      "alwaysStrict": true,
-      "noImplicitAny": true,
+      "strict": true,
       "suppressImplicitAnyIndexErrors": true,
       "noImplicitReturns": true,
-      "noImplicitThis": true,
       "noUnusedLocals": true,
       "noUnusedParameters": true,
       "noFallthroughCasesInSwitch": true,
-      "strictNullChecks": true,
       "forceConsistentCasingInFileNames": true,
-      "skipLibCheck": true,
       ...
     }
     ...
@@ -154,9 +146,6 @@ This may seem pedantic, but it does catch bugs and makes the code more robust.
 
 The `suppressImplicitAnyIndexErrors` relaxes this a bit, allowing a non-typesafe access using the
 `object['propertyName']` notation, which is convenient for bridging to pure JavaScript.
-
-The `skipLibCheck` is necessary for now, as Angular is not fully compliant with `strictNullChecks` yet.
-(It will be in 4.1, though other modules may still force us to use this flag).
 
 Primary resources
 -----------------
