@@ -6,7 +6,7 @@ configuration, there are still a handful of choices and things to remember when 
 This README describes the way I set up a project. It is not meant as a tutorial for neither Angular, nor Angular-CLI,
 but as a cookbook/checklist for going from "nothing on the disk" to "project I can start actual development in".
 
-It currently matches Angular 4.1.1, Angular-CLI 1.1.0-beta.1 and Material 2.0.0-beta.3.
+It currently matches Angular 4.1.2, Angular-CLI 1.1.0-beta.1 and Material 2.0.0-beta.4.
 
 Prerequisites
 -------------
@@ -136,7 +136,6 @@ Open the `tsconfig.json` file and add the following options:
       "suppressImplicitAnyIndexErrors": true,
       "noImplicitReturns": true,
       "noUnusedLocals": true,
-      "noUnusedParameters": true,
       "noFallthroughCasesInSwitch": true,
       "forceConsistentCasingInFileNames": true,
       ...
@@ -148,6 +147,11 @@ This may seem pedantic, but it does catch bugs and makes the code more robust.
 
 The `suppressImplicitAnyIndexErrors` relaxes this a bit, allowing a non-typesafe access using the
 `object['propertyName']` notation, which is convenient for bridging to pure JavaScript.
+
+Unfortunately, we cannot currently use `"noUnusedParameters": true` due to issues with both
+[Angular](https://github.com/angular/angular/issues/15532) and 
+[Material](https://github.com/angular/material2/issues/4443), but these will hopefully be fixed.
+
 
 Primary resources
 -----------------
@@ -168,3 +172,86 @@ Useful packages
  in particular if you also need to handle time zones (using [`moment-timezone.js`](http://momentjs.com/timezone/)),
  and it will feel familiar if you're used to Joda-Time or Java 8's date/time API.
 
+Java Deploy
+===========
+Angular and Angular-CLI are not concerned with how to actually deploy the application to a server.
+Their job ends at generating the static files; how those files ultimately get served to the web is a task for
+somebody/something else.
+
+I have included an example of how to prepare a Java Web Application Archive (.war)
+which can be deployed in any Servlet 3-compliant Java server. 
+
+The specific example uses [Maven](https://maven.apache.org/) to package the actual .war,
+but the ideas can easily be adapted to other build tools.  
+
+pom.xml
+-------
+At its simplest, it is a matter of picking up the static webapp files from Angular-CLI's output folder
+rather than from the normal Java source tree when assembling the `.war` file.
+This can be done by configuring the `webResources` parameter of the `maven-war-plugin` in the `pom.xml`.
+
+By and large, the rest of the `pom.xml` is boilerplate to set up the project, though notice that we're directing
+Maven to look in the `java-src` folder rather than the default name of `src` in a couple of places
+(`sourceDirectory`, `warSourceDirectory` and `webXml`),
+so as not to mix source code from the two different worlds.
+
+To generate the compiled and bundled Angular application, run
+
+    ng build --prod --base-href=[path-to-app]
+    
+where `path-to-app` is the address your web app is deployed to on the server (By default the .war name).
+This overrides the `<base href="/">` in `index.html`,
+ensuring that relative file names are picked up from the correct path.
+
+(I recommend setting this command up as a script in the `package.json`, just to avoid typos and ensure consistency).
+
+You can then run
+
+    mvn package
+
+to generate the .war file.
+
+HTML5 routing
+-------------
+Things get a little more tricky when we start to use the Angular Router and its HTML5-style deep links.
+The Java server will see those simply as missing resources and respond with a `404 Not Found`.
+
+In theory, we could register all the needed routes and redirect them to the `index.html`,
+serving that page as the answer to all relevant routes, but this is a tedious and error-prone double book-keeping.
+
+Instead, we exploit that the server *does* already answer all routes, namely with the 404 error page,
+and we customize that to show the application entry point.
+
+We could simply point the error page to our `index.html`,
+but this would mean that it would still be served with status code 404. This will actually work, but it is not pretty.
+So instead, we edit the `web.xml` to configure our error page for 404 to be a .jsp.
+We also need additional configuration to ensure that the JSP compiler handles the files as UTF-8 rather than the
+default ISO-8859-1:
+
+    ...
+    <jsp-config>
+      <jsp-property-group>
+        <url-pattern>*.html</url-pattern>
+        <page-encoding>utf-8</page-encoding>
+      </jsp-property-group>
+      <jsp-property-group>
+        <url-pattern>*.jsp</url-pattern>
+        <page-encoding>utf-8</page-encoding>
+      </jsp-property-group>
+    </jsp-config>
+    <error-page>
+      <error-code>404</error-code>
+      <location>/index.jsp</location>
+    </error-page>
+    ...
+
+...and the `index.jsp` sets the status code and includes the original `index.html`:
+
+    <% response.setStatus(200); %><%@ include file="/index.html" %>
+    
+Now all unknown URLs will result in the server delivering the `index.html` with a status code 200,
+and the Angular application can display its own error message for incorrect routes.
+ 
+Of course, this also means that if you genuinely have a missing file (say, a typo in an image name)
+you'll get the `index.html` instead,
+but I find this a small price to pay for avoiding the duplicated route configuration.

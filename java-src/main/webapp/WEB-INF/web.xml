@@ -1,0 +1,23 @@
+<web-app
+  xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+  version="3.0">
+  <jsp-config>
+    <!-- Make sure the server both reads the include source as UTF-8 and delivers the result as such: -->
+    <jsp-property-group>
+      <url-pattern>*.html</url-pattern>
+      <page-encoding>utf-8</page-encoding>
+    </jsp-property-group>
+    <jsp-property-group>
+      <url-pattern>*.jsp</url-pattern>
+      <page-encoding>utf-8</page-encoding>
+    </jsp-property-group>
+  </jsp-config>
+  <error-page>
+    <!-- Redirect any non-handled URLs to the Angular application entry point.
+         We pipe it through a JSP to override the status code, rather than sending it as an actual 404. -->
+    <error-code>404</error-code>
+    <location>/index.jsp</location>
+  </error-page>
+</web-app>
