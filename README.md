@@ -6,7 +6,7 @@ configuration, there are still a handful of choices and things to remember when 
 This README describes the way I set up a project. It is not meant as a tutorial for neither Angular, nor Angular-CLI,
 but as a cookbook/checklist for going from "nothing on the disk" to "project I can start actual development in".
 
-It currently matches Angular 4.1.2, Angular-CLI 1.1.0-beta.1 and Material 2.0.0-beta.4.
+It currently matches Angular 4.1.3, Angular-CLI 1.1.0-rc.0 and Material 2.0.0-beta.5.
 
 Prerequisites
 -------------
@@ -28,11 +28,14 @@ Create a project
     
 (**Note**: You may also want to add `--skip-git` if you use another source control system or prefer to initialize it in other ways).
 
-The `project-name` is, well, the project name. The `component-prefix` is a short prefix to component names,
-which is used when generating new components to avoid name collision between different libraries. This should typically
-be company/customer-specific, though in some cases a project may be large enough to warrant its own prefix.
+The `[project-name]` is, well, the project name. Primarily, this becomes the folder name, and also shows up as package
+name in `package.json`.
 
-We use SASS as the stylesheet language, in part because it works well with Material Design.
+The `[component-prefix]` is a short prefix to component names, which is used when generating new components to avoid
+name collision between different libraries. This should typically be company/customer-specific,
+though in some cases a project may be large enough to warrant its own prefix.
+
+We use [SASS](http://sass-lang.com/) as the stylesheet language, in part because it works well with Material Design.
 
 Step into the newly generated folder and add the following dependencies:
 
@@ -41,6 +44,8 @@ Step into the newly generated folder and add the following dependencies:
     npm install web-animations-js --save
     npm install sanitize.css --save
     npm install hammerjs --save
+
+(or `yarn add @angular/material @angular/animations web-animations-js sanitize.css hammerjs` if you're so inclined).
     
 and possibly
 
@@ -178,16 +183,16 @@ Angular and Angular-CLI are not concerned with how to actually deploy the applic
 Their job ends at generating the static files; how those files ultimately get served to the web is a task for
 somebody/something else.
 
-I have included an example of how to prepare a Java Web Application Archive (.war)
+I have included an example of how to prepare a Java Web Application Archive (**.war**)
 which can be deployed in any Servlet 3-compliant Java server. 
 
-The specific example uses [Maven](https://maven.apache.org/) to package the actual .war,
+The specific example uses [Maven](https://maven.apache.org/) to package the actual **.war**,
 but the ideas can easily be adapted to other build tools.  
 
 pom.xml
 -------
 At its simplest, it is a matter of picking up the static webapp files from Angular-CLI's output folder
-rather than from the normal Java source tree when assembling the `.war` file.
+rather than from the normal Java source tree when assembling the **.war** file.
 This can be done by configuring the `webResources` parameter of the `maven-war-plugin` in the `pom.xml`.
 
 By and large, the rest of the `pom.xml` is boilerplate to set up the project, though notice that we're directing
@@ -199,17 +204,17 @@ To generate the compiled and bundled Angular application, run
 
     ng build --prod --base-href=[path-to-app]
     
-where `path-to-app` is the address your web app is deployed to on the server (By default the .war name).
+where `[path-to-app]` is the address your web app is deployed to on the server (By default the **.war** name).
 This overrides the `<base href="/">` in `index.html`,
 ensuring that relative file names are picked up from the correct path.
 
-(I recommend setting this command up as a script in the `package.json`, just to avoid typos and ensure consistency).
+(I recommend setting this command up as a script in the `package.json`, to avoid typos and ensure consistency).
 
 You can then run
 
     mvn package
 
-to generate the .war file.
+to generate the **.war** file.
 
 HTML5 routing
 -------------
@@ -223,8 +228,8 @@ Instead, we exploit that the server *does* already answer all routes, namely wit
 and we customize that to show the application entry point.
 
 We could simply point the error page to our `index.html`,
-but this would mean that it would still be served with status code 404. This will actually work, but it is not pretty.
-So instead, we edit the `web.xml` to configure our error page for 404 to be a .jsp.
+but this would mean that it would still be served with status code 404. While this will actually work, it is not pretty.
+So instead, we edit the `web.xml` to configure our error page for 404 to be a **.jsp**.
 We also need additional configuration to ensure that the JSP compiler handles the files as UTF-8 rather than the
 default ISO-8859-1:
 
