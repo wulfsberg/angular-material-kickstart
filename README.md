@@ -6,7 +6,7 @@ configuration, there are still a handful of choices and things to remember when 
 This README describes the way I set up a project. It is not meant as a tutorial for neither Angular, nor Angular-CLI,
 but as a cookbook/checklist for going from "nothing on the disk" to "project I can start actual development in".
 
-It currently matches Angular 4.1.3, Angular-CLI 1.1.0-rc.0 and Material 2.0.0-beta.5.
+It currently matches Angular 4.1.3, Angular-CLI 1.1.0-rc.2 and Material 2.0.0-beta.6.
 
 Prerequisites
 -------------
@@ -16,7 +16,7 @@ from a central repository).
 
 Install the Angular CLI globally:
 
-    npm install @angular/cli@1.1.0-beta.1 -g
+    npm install @angular/cli@1.1.0-rc.2 -g
     
 Since the CLI is responsible for setting up a lot of tool packages and configuration files,
 make sure you have the latest version before using it to create a project.
@@ -138,7 +138,6 @@ Open the `tsconfig.json` file and add the following options:
     "compilerOptions": {
       ...
       "strict": true,
-      "suppressImplicitAnyIndexErrors": true,
       "noImplicitReturns": true,
       "noUnusedLocals": true,
       "noFallthroughCasesInSwitch": true,
@@ -149,9 +148,6 @@ Open the `tsconfig.json` file and add the following options:
 
 This sets up the TypeScript compiler to run a very tight ship, enforcing explicit declarations and null-handling.
 This may seem pedantic, but it does catch bugs and makes the code more robust.
-
-The `suppressImplicitAnyIndexErrors` relaxes this a bit, allowing a non-typesafe access using the
-`object['propertyName']` notation, which is convenient for bridging to pure JavaScript.
 
 Unfortunately, we cannot currently use `"noUnusedParameters": true` due to issues with both
 [Angular](https://github.com/angular/angular/issues/15532) and 
@@ -176,6 +172,13 @@ Useful packages
  * [`moment.js`](http://momentjs.com/) is highly useful for doing date manipulation and parsing/formatting,
  in particular if you also need to handle time zones (using [`moment-timezone.js`](http://momentjs.com/timezone/)),
  and it will feel familiar if you're used to Joda-Time or Java 8's date/time API.
+ 
+TSLint
+======
+The `tslint.json` settings are very much a matter of opinion. One you can pretty safely add, however, is the
+[no-conditional-assignment](https://palantir.github.io/tslint/rules/no-conditional-assignment/).
+
+    "no-conditional-assignment": true 
 
 Java Deploy
 ===========
