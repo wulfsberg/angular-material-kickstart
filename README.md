@@ -6,7 +6,7 @@ configuration, there are still a handful of choices and things to remember when 
 This README describes the way I set up a project. It is not meant as a tutorial for neither Angular, nor Angular-CLI,
 but as a cookbook/checklist for going from "nothing on the disk" to "project I can start actual development in".
 
-It currently matches Angular 4.1.3, Angular-CLI 1.1.0-rc.2 and Material 2.0.0-beta.6.
+It currently matches Angular 4.1.3, Angular-CLI 1.1.0 and Material 2.0.0-beta.6.
 
 Prerequisites
 -------------
@@ -16,7 +16,7 @@ from a central repository).
 
 Install the Angular CLI globally:
 
-    npm install @angular/cli@1.1.0-rc.2 -g
+    npm install @angular/cli -g
     
 Since the CLI is responsible for setting up a lot of tool packages and configuration files,
 make sure you have the latest version before using it to create a project.
