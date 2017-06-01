@@ -110,25 +110,27 @@ provider to the app module. I.e. in `src/app/app.module.ts`, edit providers to i
 
 Configure CSS/Material palettes
 -------------------------------
-Open the `src/styles.scss` and edit it to
-
-    @import "~sanitize.css/sanitize.css";
+Create a `src/theme.scss` file containing
 
     @import "~@angular/material/theming";
-    @include mat-core();
     $custom-theme-primary: mat-palette($mat-indigo);
     $custom-theme-accent:  mat-palette($mat-pink);
     $custom-theme-warn:    mat-palette($mat-red);
     $theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
+
+This sets up the Material Design theme as per the [theming guide](https://material.angular.io/guide/theming).
+You can choose some of the official
+[Material Design colors](https://material.io/guidelines/style/color.html#color-color-palette),
+or you can define your own palettes. (A tool like Mikel Bitson's
+[Material Design Palette Generator](http://mcg.mbitson.com/) can help you get started on your own palettes).
+
+Open the `src/styles.scss` and edit it to
+
+    @import "~sanitize.css/sanitize.css";
+    @import "~@angular/material/theming";
+    @import "./theme";
+    @include mat-core();
     @include angular-material-theme($theme);
-
-I.e.
-
- * Import the CSS normalization mentioned above.
- * Set up the Material Design theme as per the [theming guide](https://material.angular.io/guide/theming).
-   You can choose some of the official [Material Design colors](https://material.io/guidelines/style/color.html#color-color-palette),
-   or you can define your own palettes. (A tool like Mikel Bitson's
-   [Material Design Palette Generator](http://mcg.mbitson.com/) can help you get started on your own palettes).
    
 Configure TypeScript
 --------------------
