@@ -183,9 +183,8 @@ Open the `tsconfig.json` file and add the following options:
 This sets up the TypeScript compiler to run a very tight ship, enforcing explicit declarations and null-handling.
 This may seem pedantic, but it does catch bugs and makes the code more robust.
 
-Unfortunately, we cannot currently use `"noUnusedParameters": true` due to issues with both
-[Angular](https://github.com/angular/angular/issues/15532) and 
-[Material](https://github.com/angular/material2/issues/4443), but these will hopefully be fixed.
+Unfortunately, we cannot currently use `"noUnusedParameters": true` due to an
+[Angular issue](https://github.com/angular/angular/issues/17131), but this will hopefully be fixed.
 
 
 Primary resources
@@ -222,7 +221,8 @@ Reaching back in the old bag of tricks, I use some Gulp tasks (in the `gulpfile.
 
 To include the needed tools, run
 
-    yarn add gulp gulp-imagemin gulp-gzip --dev
+    npm install gulp gulp-imagemin gulp-gzip --save-dev
+    (or yarn add gulp gulp-imagemin gulp-gzip --dev)
     
 I typically add the tasks to the build script in `package.json`, so it looks something like
 
