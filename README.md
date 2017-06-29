@@ -6,7 +6,7 @@ configuration, there are still a handful of choices and things to remember when 
 This README describes the way I set up a project. It is not meant as a tutorial for neither Angular, nor Angular-CLI,
 but as a cookbook/checklist for going from "nothing on the disk" to "project I can start actual development in".
 
-It currently matches Angular 4.1.3, Angular-CLI 1.1.0 and Material 2.0.0-beta.6.
+It currently matches Angular 4.2.4, Angular-CLI 1.1.3 and Material 2.0.0-beta.7.
 
 Prerequisites
 -------------
@@ -84,6 +84,7 @@ The animations module needs to be imported in the `src/app/app.module.ts`:
     import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ...
     imports: [
+      ...
       BrowserAnimationsModule,
       ...
     ]
@@ -108,15 +109,40 @@ provider to the app module. I.e. in `src/app/app.module.ts`, edit providers to i
     providers: [{provide: LOCALE_ID, useValue: 'da-DK'}],
     ...
 
+app.module.ts in total
+----------------------
+For an overview, the `app.module.ts` ends up looking something like this: 
+
+    import { LOCALE_ID, NgModule } from '@angular/core';
+    import { BrowserModule } from '@angular/platform-browser';
+    import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+    import { AppComponent } from './app.component';
+    import 'hammerjs';
+
+    @NgModule({
+      declarations: [
+        AppComponent
+      ],
+      imports: [
+        BrowserModule,
+        BrowserAnimationsModule
+      ],
+      providers: [{provide: LOCALE_ID, useValue: 'da-DK'}],
+      bootstrap: [AppComponent]
+    })
+    export class AppModule {
+    }
+
+
 Configure CSS/Material palettes
 -------------------------------
 Create a `src/theme.scss` file containing
 
     @import "~@angular/material/theming";
-    $custom-theme-primary: mat-palette($mat-indigo);
-    $custom-theme-accent:  mat-palette($mat-pink);
-    $custom-theme-warn:    mat-palette($mat-red);
-    $theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
+    $primary: mat-palette($mat-indigo);
+    $accent:  mat-palette($mat-pink);
+    $warn:    mat-palette($mat-red);
+    $theme: mat-light-theme($primary, $accent, $warn);
 
 This sets up the Material Design theme as per the [theming guide](https://material.angular.io/guide/theming).
 You can choose some of the official
@@ -131,6 +157,12 @@ Open the `src/styles.scss` and edit it to
     @import "./theme";
     @include mat-core();
     @include angular-material-theme($theme);
+    @include angular-material-typography(mat-typography-config(
+      $font-family: "Comic Sans MS" /* Ok, perhaps not */
+    ));
+
+The reason this setup is split into two files is to keep mixins and function calls separate,
+so we can import and reuse the color/theme variables in our own components without triggering the function calls.
    
 Configure TypeScript
 --------------------
@@ -180,7 +212,23 @@ TSLint
 The `tslint.json` settings are very much a matter of opinion. One you can pretty safely add, however, is the
 [no-conditional-assignment](https://palantir.github.io/tslint/rules/no-conditional-assignment/).
 
-    "no-conditional-assignment": true 
+    "no-conditional-assignment": true
+
+GZip/imagemin
+=============
+Reaching back in the old bag of tricks, I use some Gulp tasks (in the `gulpfile.js`) to optimize the generated
+ assets by recompressing images and pre-zipping the files, since many servers are set up to automatically deliver the
+`.gz` version of files if they exist and the browser supports it.
+
+To include the needed tools, run
+
+    yarn add gulp gulp-imagemin gulp-gzip --dev
+    
+I typically add the tasks to the build script in `package.json`, so it looks something like
+
+    "build": "ng build --prod --base-href=angular-material-kickstart && gulp imagemin && gulp gzip",
+
+(The `--base-href` is there because I deploy on an application path, rather than to the root of the server).
 
 Java Deploy
 ===========
