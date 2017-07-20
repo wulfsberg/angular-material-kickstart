@@ -18,7 +18,12 @@ gulp.task('gzip', () => {
 
 gulp.task('imagemin', () => {
   gulp.src('./dist/**/*.{jpg,jpeg,png,gif,svg}')
-  // Angular Material's icons may use the defs and IDs for sprite sheets, so don't remove them:
-    .pipe(imagemin([imagemin.svgo({plugins: [{cleanupIDs: false, removeUselessDefs: false}]})]))
+    .pipe(imagemin([
+      imagemin.gifsicle(),
+      imagemin.jpegtran(),
+      imagemin.optipng(),
+      // We use the defs and IDs for sprite sheets, so don't remove them:
+      imagemin.svgo({plugins: [{cleanupIDs: false, removeUselessDefs: false}]})
+    ]))
     .pipe(gulp.dest('./dist/'))
 });
