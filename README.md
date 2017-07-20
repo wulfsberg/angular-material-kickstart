@@ -6,7 +6,7 @@ configuration, there are still a handful of choices and things to remember when 
 This README describes the way I set up a project. It is not meant as a tutorial for neither Angular, nor Angular-CLI,
 but as a cookbook/checklist for going from "nothing on the disk" to "project I can start actual development in".
 
-It currently matches Angular 4.2.4, Angular-CLI 1.1.3 and Material 2.0.0-beta.7.
+It currently matches Angular 4.3.1, Angular-CLI 1.3.0-beta.1 and Material 2.0.0-beta.8.
 
 Prerequisites
 -------------
@@ -40,12 +40,11 @@ We use [SASS](http://sass-lang.com/) as the stylesheet language, in part because
 Step into the newly generated folder and add the following dependencies:
 
     npm install @angular/material --save
+    npm install @angular/cdk --save
     npm install @angular/animations --save
     npm install web-animations-js --save
     npm install sanitize.css --save
     npm install hammerjs --save
-
-(or `yarn add @angular/material @angular/animations web-animations-js sanitize.css hammerjs` if you're so inclined).
     
 and possibly
 
@@ -53,6 +52,8 @@ and possibly
     
 `material` is the [Angular implementation](https://material.angular.io/) of
 [Google's Material Design](https://material.io/guidelines/) and provides some elegant standard components.
+
+`cdk` is the Angular Component Development Kit, an underlying part of the Material project.
 
 `animations` is separate from the Angular core to minimize the size for projects which do not need it,
 but it is needed for Material.
@@ -156,10 +157,10 @@ Open the `src/styles.scss` and edit it to
     @import "~@angular/material/theming";
     @import "./theme";
     @include mat-core();
-    @include angular-material-theme($theme);
     @include angular-material-typography(mat-typography-config(
       $font-family: "Comic Sans MS" /* Ok, perhaps not */
     ));
+    @include angular-material-theme($theme);
 
 The reason this setup is split into two files is to keep mixins and function calls separate,
 so we can import and reuse the color/theme variables in our own components without triggering the function calls.
@@ -212,6 +213,13 @@ The `tslint.json` settings are very much a matter of opinion. One you can pretty
 [no-conditional-assignment](https://palantir.github.io/tslint/rules/no-conditional-assignment/).
 
     "no-conditional-assignment": true
+    
+others worth considering are [member-access](https://palantir.github.io/tslint/rules/member-access/) and 
+[no-this-assignment](https://palantir.github.io/tslint/rules/no-this-assignment/)
+
+    "member-access": [true, "no-public"],
+    "no-this-assignment": true
+
 
 GZip/imagemin
 =============
@@ -222,7 +230,6 @@ Reaching back in the old bag of tricks, I use some Gulp tasks (in the `gulpfile.
 To include the needed tools, run
 
     npm install gulp gulp-imagemin gulp-gzip --save-dev
-    (or yarn add gulp gulp-imagemin gulp-gzip --dev)
     
 I typically add the tasks to the build script in `package.json`, so it looks something like
 
@@ -275,7 +282,7 @@ Things get a little more tricky when we start to use the Angular Router and its 
 The Java server will see those simply as missing resources and respond with a `404 Not Found`.
 
 In theory, we could register all the needed routes and redirect them to the `index.html`,
-serving that page as the answer to all relevant routes, but this is a tedious and error-prone double book-keeping.
+serving that page as the answer to all relevant routes, but this is a tedious and error-prone double bookkeeping.
 
 Instead, we exploit that the server *does* already answer all routes, namely with the 404 error page,
 and we customize that to show the application entry point.
