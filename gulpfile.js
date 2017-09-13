@@ -1,4 +1,4 @@
-// yarn add gulp gulp-imagemin gulp-gzip --dev
+// npm i gulp gulp-imagemin gulp-gzip --save-dev
 
 /*
  * These are small utility tasks to pre-zip files and optimize image compression.

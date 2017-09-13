@@ -6,7 +6,7 @@ configuration, there are still a handful of choices and things to remember when 
 This README describes the way I set up a project. It is not meant as a tutorial for neither Angular, nor Angular-CLI,
 but as a cookbook/checklist for going from "nothing on the disk" to "project I can start actual development in".
 
-It currently matches Angular 4.3.1, Angular-CLI 1.3.0-beta.1 and Material 2.0.0-beta.8.
+It currently matches Angular 4.3.6, Angular-CLI 1.4.1 and Material 2.0.0-beta.10.
 
 Prerequisites
 -------------
@@ -39,12 +39,7 @@ We use [SASS](http://sass-lang.com/) as the stylesheet language, in part because
 
 Step into the newly generated folder and add the following dependencies:
 
-    npm install @angular/material --save
-    npm install @angular/cdk --save
-    npm install @angular/animations --save
-    npm install web-animations-js --save
-    npm install sanitize.css --save
-    npm install hammerjs --save
+    npm install @angular/material @angular/cdk @angular/animations web-animations-js sanitize.css hammerjs --save
     
 and possibly
 
@@ -224,7 +219,7 @@ others worth considering are [member-access](https://palantir.github.io/tslint/r
 GZip/imagemin
 =============
 Reaching back in the old bag of tricks, I use some Gulp tasks (in the `gulpfile.js`) to optimize the generated
- assets by recompressing images and pre-zipping the files, since many servers are set up to automatically deliver the
+ assets by recompressing images and pre-zipping the files, since many servers can be set up to automatically deliver the
 `.gz` version of files if they exist and the browser supports it.
 
 To include the needed tools, run
