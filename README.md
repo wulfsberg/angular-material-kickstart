@@ -209,11 +209,13 @@ The `tslint.json` settings are very much a matter of opinion. One you can pretty
 
     "no-conditional-assignment": true
     
-others worth considering are [member-access](https://palantir.github.io/tslint/rules/member-access/) and 
-[no-this-assignment](https://palantir.github.io/tslint/rules/no-this-assignment/)
+others worth considering are [member-access](https://palantir.github.io/tslint/rules/member-access/), 
+[no-this-assignment](https://palantir.github.io/tslint/rules/no-this-assignment/) and
+updating [quotemark](https://palantir.github.io/tslint/rules/quotemark/):
 
     "member-access": [true, "no-public"],
-    "no-this-assignment": true
+    "no-this-assignment": true,
+    "quotemark": [true, "single", "avoid-escape", "avoid-template"]
 
 
 GZip/imagemin
