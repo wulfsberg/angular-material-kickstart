@@ -215,7 +215,7 @@ updating [quotemark](https://palantir.github.io/tslint/rules/quotemark/):
 
     "member-access": [true, "no-public"],
     "no-this-assignment": true,
-    "quotemark": [true, "single", "avoid-escape", "avoid-template"]
+    "quotemark": [true, "single", "avoid-escape", "avoid-escape"]
 
 
 GZip/imagemin
