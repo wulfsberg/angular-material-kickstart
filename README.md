@@ -205,21 +205,53 @@ Useful packages
 TSLint
 ======
 The `tslint.json` settings are very much a matter of opinion. One you can pretty safely add, however, is the
-[no-conditional-assignment](https://palantir.github.io/tslint/rules/no-conditional-assignment/).
+[no-conditional-assignment](https://palantir.github.io/tslint/rules/no-conditional-assignment/).    
 
-    "no-conditional-assignment": true
-    
-others worth considering are [member-access](https://palantir.github.io/tslint/rules/member-access/),
+Others worth considering are [member-access](https://palantir.github.io/tslint/rules/member-access/),
 [no-null-keyword](https://palantir.github.io/tslint/rules/no-null-keyword/) and
 [no-this-assignment](https://palantir.github.io/tslint/rules/no-this-assignment/); and updating 
-[arrow-return-shorthand](https://palantir.github.io/tslint/rules/arrow-return-shorthand/) and
-[quotemark](https://palantir.github.io/tslint/rules/quotemark/):
+[arrow-return-shorthand](https://palantir.github.io/tslint/rules/arrow-return-shorthand/),
+[quotemark](https://palantir.github.io/tslint/rules/quotemark/) and
+[triple-equals](https://palantir.github.io/tslint/rules/triple-equals/):
 
+    "arrow-return-shorthand": [true, "multiline"],
     "member-access": [true, "no-public"],
+    "no-conditional-assignment": true,
     "no-null-keyword": true,
     "no-this-assignment": true,
-    "arrow-return-shorthand": [true, "multiline"],
     "quotemark": [true, "single", "avoid-escape", "avoid-template"],
+    "triple-equals": [true, "allow-undefined-check"],
+
+Allowing coerced (double) equals for `undefined` is a robust way of handling potential `null` values
+(say, from other libraries), since `x == undefined` is true for `x = null`.
+
+no-uninitialized
+----------------
+TypeScript has an corner case where uninitialized class variables are left as `undefined` even if the type does not
+allow it.
+It is not entirely clear how this should be handled, as enforcing it consistently is both technically difficult,
+and can be pragmatically cumbersome in some common patterns.
+There is a long [GitHub discussion](https://github.com/Microsoft/TypeScript/issues/8476) about it, which has led to
+the design being revisited, but until we have some sort of built-in support, it seems the
+[tslint-strict-null-checks](https://github.com/alhugone/tslint-strict-null-checks)
+add-on can provide a useful check.
+
+    npm install tslint-strict-null-checks --save-dev
+    
+to install it, and update the `tslint.json` to include:
+
+    "rulesDirectory": [
+      ..
+      "node_modules/tslint-strict-null-checks/rules"
+    ],
+    "rules": {
+      ...
+      "no-uninitialized": [true, "variables", "properties"],
+      ...
+    }
+    
+I am unsure whether this will end up being more hassle than it is worth. I am currently testing this in some projects,
+and will decide on a recommendation once I have some experience with the practical impact.
 
 
 GZip/imagemin
@@ -234,7 +266,7 @@ To include the needed tools, run
     
 I typically add the tasks to the build script in `package.json`, so it looks something like
 
-    "build": "ng build --prod --base-href=angular-material-kickstart && gulp imagemin && gulp gzip",
+    "build": "ng build --prod --build-optimizer --base-href=angular-material-kickstart && gulp imagemin && gulp gzip",
 
 (The `--base-href` is there because I deploy on an application path, rather than to the root of the server).
 
@@ -265,11 +297,12 @@ To generate the compiled and bundled Angular application, run
 
     ng build --prod --base-href=[path-to-app]
     
-where `[path-to-app]` is the address your web app is deployed to on the server (By default the **.war** name).
+where `[path-to-app]` is the address your web app is deployed to on the server (typically the **.war** name).
 This overrides the `<base href="/">` in `index.html`,
 ensuring that relative file names are picked up from the correct path.
 
-(I recommend setting this command up as a script in the `package.json`, to avoid typos and ensure consistency).
+(As mentioned above, I recommend setting this command up as a script in the `package.json`,
+to avoid typos and ensure consistency).
 
 You can then run
 
