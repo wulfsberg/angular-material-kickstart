@@ -246,9 +246,13 @@ to install it, and update the `tslint.json` to include:
     ],
     "rules": {
       ...
-      "no-uninitialized": [true, "variables", "properties"],
+      "no-uninitialized": [true, "properties"],
       ...
     }
+    
+We only check properties. TypeScript's own null-validation and inference works better for variables, ensuring that they
+are not _used_ before assignment, which is what we really want
+(rather than the stricter "must be assigned on declaration" which this rule enforces).    
     
 I am unsure whether this will end up being more hassle than it is worth. I am currently testing this in some projects,
 and will decide on a recommendation once I have some experience with the practical impact.
