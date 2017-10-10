@@ -6,7 +6,7 @@ configuration, there are still a handful of choices and things to remember when 
 This README describes the way I set up a project. It is not meant as a tutorial for neither Angular, nor Angular-CLI,
 but as a cookbook/checklist for going from "nothing on the disk" to "project I can start actual development in".
 
-It currently matches Angular 4.3.6, Angular-CLI 1.4.1 and Material 2.0.0-beta.10.
+It currently matches Angular 4.4.4, Angular-CLI 1.4.5 and Material 2.0.0-beta.12.
 
 Prerequisites
 -------------
@@ -102,7 +102,7 @@ provider to the app module. I.e. in `src/app/app.module.ts`, edit providers to i
 
     import { LOCALE_ID, NgModule } from '@angular/core';
     ...
-    providers: [{provide: LOCALE_ID, useValue: 'da-DK'}],
+    providers: [{provide: LOCALE_ID, useValue: 'da-DK'}], // Your locale of choice
     ...
 
 app.module.ts in total
@@ -123,7 +123,7 @@ For an overview, the `app.module.ts` ends up looking something like this:
         BrowserModule,
         BrowserAnimationsModule
       ],
-      providers: [{provide: LOCALE_ID, useValue: 'da-DK'}],
+      providers: [{provide: LOCALE_ID, useValue: 'da-DK'}], // Your locale of choice
       bootstrap: [AppComponent]
     })
     export class AppModule {
@@ -222,8 +222,10 @@ Others worth considering are [member-access](https://palantir.github.io/tslint/r
     "quotemark": [true, "single", "avoid-escape", "avoid-template"],
     "triple-equals": [true, "allow-undefined-check"],
 
-Allowing coerced (double) equals for `undefined` is a robust way of handling potential `null` values
-(say, from other libraries), since `x == undefined` is true for `x = null`.
+If you need to guard against null from 3rd-party libraries, use coercing equality (`==undefined` and `!=undefined`),
+which is explicitly allowed by these rules.
+
+(To get all these rules, you may need to update TSLint; `npm install tslint --save-dev`).
 
 no-uninitialized
 ----------------
