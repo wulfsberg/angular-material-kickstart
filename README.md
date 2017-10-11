@@ -159,7 +159,16 @@ Open the `src/styles.scss` and edit it to
 
 The reason this setup is split into two files is to keep mixins and function calls separate,
 so we can import and reuse the color/theme variables in our own components without triggering the function calls.
-   
+
+###mat-icon
+If you use `mat-icon` with Google's [Material Design Icons](https://material.io/icons/), remember to include the
+font file:
+
+    <head>
+      ...
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
+
 Configure TypeScript
 --------------------
 Open the `tsconfig.json` file and add the following options:
