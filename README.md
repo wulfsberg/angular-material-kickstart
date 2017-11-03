@@ -1,12 +1,12 @@
 angular-material-kickstart
 ==========================
-While Angular is a fairly opinionated framework, and Angular-CLI does a good job of setting up a lot of tools and
+While Angular is a fairly opinionated framework, and Angular CLI does a good job of setting up a lot of tools and
 configuration, there are still a handful of choices and things to remember when setting up a new project from scratch.
 
-This README describes the way I set up a project. It is not meant as a tutorial for neither Angular, nor Angular-CLI,
+This README describes the way I set up a project. It is not meant as a tutorial for neither Angular, nor Angular CLI,
 but as a cookbook/checklist for going from "nothing on the disk" to "project I can start actual development in".
 
-It currently matches Angular 4.4.4, Angular-CLI 1.4.5 and Material 2.0.0-beta.12.
+It currently matches Angular 5.0.0, Angular CLI 1.5.0 and Material 2.0.0-beta.12.
 
 Prerequisites
 -------------
@@ -41,10 +41,6 @@ Step into the newly generated folder and add the following dependencies:
 
     npm install @angular/material @angular/cdk @angular/animations web-animations-js sanitize.css hammerjs --save
     
-and possibly
-
-    npm install intl --save
-    
 `material` is the [Angular implementation](https://material.angular.io/) of
 [Google's Material Design](https://material.io/guidelines/) and provides some elegant standard components.
 
@@ -65,13 +61,12 @@ It is less of an issue when using the Material project, but is still a nice help
 [`hammerjs`](http://hammerjs.github.io/) provides gesture support, such as swipe and pinch. A couple of the Material
 components support this, so we include the library to get full functionality.
 
-`intl` is a polyfill for the ECMAScript internationalization API, to handle things like date and number formats.
-The standard API is widely supported in modern browsers, only lacking in IE10, Safari 9 or Opera Mini,
-so you may or may not need this polyfill, depending on your target.
 
 Enable polyfills
 ----------------
 To enable the needed polyfills, open the `src/polyfills.ts` file and uncomment as needed.
+(Be aware that the template file is currently slightly outdated. You will not need the `intl` polyfill anymore,
+and likely nor `reflect` either).
 
 Enable animations
 -----------------
@@ -162,7 +157,7 @@ so we can import and reuse the color/theme variables in our own components witho
 
 ###mat-icon
 If you use `mat-icon` with Google's [Material Design Icons](https://material.io/icons/), remember to include the
-font file:
+font file in `index.html`:
 
     <head>
       ...
@@ -173,29 +168,40 @@ Configure TypeScript
 --------------------
 Open the `tsconfig.json` file and add the following options:
 
-    ...
-    "compilerOptions": {
+    {
       ...
-      "strict": true,
-      "noImplicitReturns": true,
-      "noUnusedLocals": true,
-      "noFallthroughCasesInSwitch": true,
-      "forceConsistentCasingInFileNames": true,
+      "compilerOptions": {
+        ...
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "strict": true,
+        ...
+      }
       ...
     }
-    ...
 
 This sets up the TypeScript compiler to run a very tight ship, enforcing explicit declarations and null-handling.
 This may seem pedantic, but it does catch bugs and makes the code more robust.
 
-Unfortunately, we cannot currently use `"noUnusedParameters": true` due to an
-[Angular issue](https://github.com/angular/angular/issues/17131), but this will hopefully be fixed.
+Also add
 
+    {
+      ...
+      "angularCompilerOptions": {
+        "preserveWhitespaces": false
+      },
+      ...
+    }
+
+to minimize your templates.
 
 Primary resources
 -----------------
  * [Angular](https://angular.io/docs/ts/latest/) and its [GitHub repository](https://github.com/angular/angular)
- * [Angular-CLI](https://cli.angular.io/) and its [GitHub repository](https://github.com/angular/angular-cli).
+ * [Angular CLI](https://cli.angular.io/) and its [GitHub repository](https://github.com/angular/angular-cli).
    (The most relevant documentation is on the project's [GitHub Wiki](https://github.com/angular/angular-cli/wiki))
  * [Angular Material Design](https://material.angular.io/components) and its [GitHub](https://github.com/angular/material2).
  
@@ -287,7 +293,7 @@ I typically add the tasks to the build script in `package.json`, so it looks som
 
 Java Deploy
 ===========
-Angular and Angular-CLI are not concerned with how to actually deploy the application to a server.
+Angular and Angular CLI are not concerned with how to actually deploy the application to a server.
 Their job ends at generating the static files; how those files ultimately get served to the web is a task for
 somebody/something else.
 
@@ -299,7 +305,7 @@ but the ideas can easily be adapted to other build tools.
 
 pom.xml
 -------
-At its simplest, it is a matter of picking up the static webapp files from Angular-CLI's output folder
+At its simplest, it is a matter of picking up the static webapp files from Angular CLI's output folder
 rather than from the normal Java source tree when assembling the **.war** file.
 This can be done by configuring the `webResources` parameter of the `maven-war-plugin` in the `pom.xml`.
 
