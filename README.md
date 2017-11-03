@@ -287,7 +287,7 @@ To include the needed tools, run
     
 I typically add the tasks to the build script in `package.json`, so it looks something like
 
-    "build": "ng build --prod --build-optimizer --base-href=angular-material-kickstart && gulp imagemin && gulp gzip",
+    "build": "ng build --prod --base-href=angular-material-kickstart && gulp imagemin && gulp gzip",
 
 (The `--base-href` is there because I deploy on an application path, rather than to the root of the server).
 
