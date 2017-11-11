@@ -6,7 +6,7 @@ configuration, there are still a handful of choices and things to remember when 
 This README describes the way I set up a project. It is not meant as a tutorial for neither Angular, nor Angular CLI,
 but as a cookbook/checklist for going from "nothing on the disk" to "project I can start actual development in".
 
-It currently matches Angular 5.0.0, Angular CLI 1.5.0 and Material 2.0.0-beta.12.
+It currently matches Angular 5.0.1, Angular CLI 1.5.0 and Material 5.0.0-rc.0.
 
 Prerequisites
 -------------
@@ -65,8 +65,7 @@ components support this, so we include the library to get full functionality.
 Enable polyfills
 ----------------
 To enable the needed polyfills, open the `src/polyfills.ts` file and uncomment as needed.
-(Be aware that the template file is currently slightly outdated. You will not need the `intl` polyfill anymore,
-and likely nor `reflect` either).
+(Be aware that the template file is currently slightly outdated. You will not need the `intl` polyfill anymore).
 
 Enable animations
 -----------------
@@ -92,24 +91,39 @@ the `src/app/app.module.ts`:
 
 Set locale
 ----------
-To ensure that locale-specific pipes (such as date or number format) use the correct locale, add a `LOCALE_ID`
-provider to the app module. I.e. in `src/app/app.module.ts`, edit providers to include
+To ensure that locale-specific pipes (such as date or number format) use the correct locale, you need to include the
+appropriate locale file in the build.
 
+If you're using AOT-compilation, you can add `--locale=da-DK` to your build
+command, e.g. `ng serve --aot --locale=da-DK`. (Production build uses AOT by default, and it will likely be default
+in dev build in the future, too).
+
+If you're using JIT-compilation, you need to include, register and provide the locale in the source code.
+Edit the `src/app/app.module.ts` to include
+
+    import { registerLocaleData } from '@angular/common';
+    import locale from '@angular/common/locales/da';
     import { LOCALE_ID, NgModule } from '@angular/core';
+    
+    registerLocaleData(locale);
     ...
-    providers: [{provide: LOCALE_ID, useValue: 'da-DK'}], // Your locale of choice
+    providers: [{provide: LOCALE_ID, useValue: 'da-DK'}],
     ...
 
 app.module.ts in total
 ----------------------
 For an overview, the `app.module.ts` ends up looking something like this: 
 
+    import { registerLocaleData } from '@angular/common';
+    import locale from '@angular/common/locales/da';
     import { LOCALE_ID, NgModule } from '@angular/core';
     import { BrowserModule } from '@angular/platform-browser';
     import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-    import { AppComponent } from './app.component';
     import 'hammerjs';
-
+    import { AppComponent } from './app.component';
+    
+    registerLocaleData(locale);
+    
     @NgModule({
       declarations: [
         AppComponent
@@ -118,7 +132,7 @@ For an overview, the `app.module.ts` ends up looking something like this:
         BrowserModule,
         BrowserAnimationsModule
       ],
-      providers: [{provide: LOCALE_ID, useValue: 'da-DK'}], // Your locale of choice
+      providers: [{provide: LOCALE_ID, useValue: 'da-DK'}],
       bootstrap: [AppComponent]
     })
     export class AppModule {
@@ -274,6 +288,13 @@ are not _used_ before assignment, which is what we really want
 I am unsure whether this will end up being more hassle than it is worth. I am currently testing this in some projects,
 and will decide on a recommendation once I have some experience with the practical impact.
 
+Codelyzer
+---------
+The Codelyzer (additional TSLint help specifically for Angular) installed by CLI 1.5.0 is slightly out of date.
+
+    npm install codelyzer@~4.0.1 --save-dev
+    
+to get a version aligned with Angular 5.
 
 GZip/imagemin
 =============
