@@ -299,16 +299,16 @@ to get a version aligned with Angular 5.
 GZip/imagemin
 =============
 Reaching back in the old bag of tricks, I use some Gulp tasks (in the `gulpfile.js`) to optimize the generated
- assets by recompressing images and pre-zipping the files, since many servers can be set up to automatically deliver the
-`.gz` version of files if they exist and the browser supports it.
+ assets by recompressing images and pre-compressing the files, since many servers can be set up to automatically deliver the
+`.gz` or `.br` version of files if they exist and the browser supports it.
 
 To include the needed tools, run
 
-    npm install gulp gulp-imagemin gulp-gzip --save-dev
+    npm install gulp gulp-imagemin gulp-gzip gulp-brotli --save-dev
     
 I typically add the tasks to the build script in `package.json`, so it looks something like
 
-    "build": "ng build --prod --base-href=angular-material-kickstart && gulp imagemin && gulp gzip",
+    "build": "ng build --prod --base-href=angular-material-kickstart && gulp imagemin && gulp gzip && gulp brotli",
 
 (The `--base-href` is there because I deploy on an application path, rather than to the root of the server).
 

@@ -1,4 +1,4 @@
-// npm install gulp gulp-imagemin gulp-gzip --save-dev
+// npm install gulp gulp-imagemin gulp-gzip gulp-brotli --save-dev
 
 /*
  * These are small utility tasks to pre-zip files and optimize image compression.
@@ -8,11 +8,18 @@
 const
   gulp = require('gulp'),
   gzip = require('gulp-gzip'),
+  brotli = require('gulp-brotli'),
   imagemin = require('gulp-imagemin');
 
 gulp.task('gzip', () => {
-  gulp.src(['./dist/*'])
+  gulp.src(['./dist/*', '!**/*.{br,gz}'])
     .pipe(gzip())
+    .pipe(gulp.dest('./dist/'));
+});
+
+gulp.task('brotli', () => {
+  gulp.src(['./dist/*', '!**/*.{br,gz}'])
+    .pipe(brotli.compress())
     .pipe(gulp.dest('./dist/'));
 });
 

@@ -1,4 +1,3 @@
-@rem yarn
 call npm run build
 @IF %ERRORLEVEL% NEQ 0 GOTO error
 call mvn clean package
