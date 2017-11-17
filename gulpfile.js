@@ -25,12 +25,6 @@ gulp.task('brotli', () => {
 
 gulp.task('imagemin', () => {
   gulp.src('./dist/**/*.{jpg,jpeg,png,gif,svg}')
-    .pipe(imagemin([
-      imagemin.gifsicle(),
-      imagemin.jpegtran(),
-      imagemin.optipng(),
-      // We use the defs and IDs for sprite sheets, so don't remove them:
-      imagemin.svgo({plugins: [{cleanupIDs: false, removeUselessDefs: false}]})
-    ]))
+    .pipe(imagemin([]))
     .pipe(gulp.dest('./dist/'))
 });
