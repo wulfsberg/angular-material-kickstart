@@ -6,7 +6,10 @@ configuration, there are still a handful of choices and things to remember when 
 This README describes the way I set up a project. It is not meant as a tutorial for neither Angular, nor Angular CLI,
 but as a cookbook/checklist for going from "nothing on the disk" to "project I can start actual development in".
 
-It currently matches Angular 5.0.1, Angular CLI 1.5.0 and Material 5.0.0-rc.0.
+It is deliberately not meant as a "seed project", instead going through the additions you need to the default output
+of various tools, making it easier to apply to other versions, and to customize for your purpose.
+
+It currently matches Angular 5.1.0, Angular CLI 1.6.0 and Material 5.0.0.
 
 Prerequisites
 -------------
@@ -65,7 +68,6 @@ components support this, so we include the library to get full functionality.
 Enable polyfills
 ----------------
 To enable the needed polyfills, open the `src/polyfills.ts` file and uncomment as needed.
-(Be aware that the template file is currently slightly outdated. You will not need the `intl` polyfill anymore).
 
 Enable animations
 -----------------
@@ -169,7 +171,7 @@ Open the `src/styles.scss` and edit it to
 The reason this setup is split into two files is to keep mixins and function calls separate,
 so we can import and reuse the color/theme variables in our own components without triggering the function calls.
 
-###mat-icon
+### mat-icon
 If you use `mat-icon` with Google's [Material Design Icons](https://material.io/icons/), remember to include the
 font file in `index.html`:
 
@@ -211,6 +213,9 @@ Also add
     }
 
 to minimize your templates.
+
+(You can up your TypeScript version to `~2.5.3`, but it doesn't really give you much. The [2.6](https://blogs.msdn.microsoft.com/typescript/2017/10/31/announcing-typescript-2-6/) version is the juicy one,
+but Angular does not yet officially support that).
 
 Primary resources
 -----------------
@@ -283,18 +288,10 @@ to install it, and update the `tslint.json` to include:
     
 We only check properties. TypeScript's own null-validation and inference works better for variables, ensuring that they
 are not _used_ before assignment, which is what we really want
-(rather than the stricter "must be assigned on declaration" which this rule enforces).    
-    
-I am unsure whether this will end up being more hassle than it is worth. I am currently testing this in some projects,
-and will decide on a recommendation once I have some experience with the practical impact.
+(rather than the stricter "must be assigned on declaration" which this rule enforces).
 
-Codelyzer
----------
-The Codelyzer (additional TSLint help specifically for Angular) installed by CLI 1.5.0 is slightly out of date.
+This will be covered under the `strict` compiler option in an upcoming TypeScript release.
 
-    npm install codelyzer@~4.0.1 --save-dev
-    
-to get a version aligned with Angular 5.
 
 GZip/imagemin
 =============
