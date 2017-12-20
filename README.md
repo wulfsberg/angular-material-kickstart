@@ -172,13 +172,11 @@ The reason this setup is split into two files is to keep mixins and function cal
 so we can import and reuse the color/theme variables in our own components without triggering the function calls.
 
 ### mat-icon
-If you use `mat-icon` with Google's [Material Design Icons](https://material.io/icons/), remember to include the
-font file in `index.html`:
+If you use `mat-icon` with Google's [Material Design Icons](https://material.io/icons/),
+you need to import the icon font, too, so add an additional import to the `styles.scss`:
 
-    <head>
-      ...
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    </head>
+    @import url('https://fonts.googleapis.com/css?family=Material+Icons');
+
 
 Configure TypeScript
 --------------------
