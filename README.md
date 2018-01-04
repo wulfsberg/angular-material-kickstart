@@ -243,6 +243,7 @@ Others worth considering are [member-access](https://palantir.github.io/tslint/r
 [no-null-keyword](https://palantir.github.io/tslint/rules/no-null-keyword/) and
 [no-this-assignment](https://palantir.github.io/tslint/rules/no-this-assignment/); and updating 
 [arrow-return-shorthand](https://palantir.github.io/tslint/rules/arrow-return-shorthand/),
+[semicolon](https://palantir.github.io/tslint/rules/semicolon/),
 [quotemark](https://palantir.github.io/tslint/rules/quotemark/) and
 [triple-equals](https://palantir.github.io/tslint/rules/triple-equals/):
 
@@ -252,6 +253,7 @@ Others worth considering are [member-access](https://palantir.github.io/tslint/r
     "no-null-keyword": true,
     "no-this-assignment": true,
     "quotemark": [true, "single", "avoid-escape", "avoid-template"],
+    "semicolon": [true, "always", "strict-bound-class-methods"],
     "triple-equals": [true, "allow-undefined-check"],
 
 If you need to guard against null from 3rd-party libraries, use coercing equality (`==undefined` and `!=undefined`),
