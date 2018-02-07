@@ -25,6 +25,6 @@ gulp.task('brotli', () => {
 
 gulp.task('imagemin', () => {
   gulp.src('./dist/**/*.{jpg,jpeg,png,gif,svg}')
-    .pipe(imagemin([]))
+    .pipe(imagemin())
     .pipe(gulp.dest('./dist/'))
 });
