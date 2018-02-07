@@ -230,10 +230,13 @@ much like the development console does for "normal" HTML.
 
 Useful packages
 ---------------
- * [`moment.js`](http://momentjs.com/) is highly useful for doing date manipulation and parsing/formatting,
- in particular if you also need to handle time zones (using [`moment-timezone.js`](http://momentjs.com/timezone/)),
+ * [`moment.js`](https://momentjs.com/) is highly useful for doing date manipulation and parsing/formatting,
+ in particular if you also need to handle time zones (using [`moment-timezone.js`](https://momentjs.com/timezone/)),
  and it will feel familiar if you're used to Joda-Time or Java 8's date/time API.
- 
+ * [`anchorme`](https://alexcorvi.github.io/anchorme.js/) is a "linkifier" which turns links in text into clickable markup,
+ and seems to strike a good balance between features and (ease of) configuration.
+
+
 TSLint
 ======
 The `tslint.json` settings are very much a matter of opinion. One you can pretty safely add, however, is the
