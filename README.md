@@ -9,7 +9,7 @@ but as a cookbook/checklist for going from "nothing on the disk" to "project I c
 It is deliberately not meant as a "seed project", instead going through the additions you need to the default output
 of various tools, making it easier to apply to other versions, and to customize for your purpose.
 
-It currently matches Angular 5.1.0, Angular CLI 1.6.0 and Material 5.0.0.
+It currently matches Angular 6.0.0, Angular CLI 6.0.0 and Material 6.0.0.
 
 Prerequisites
 -------------
@@ -42,7 +42,7 @@ We use [SASS](http://sass-lang.com/) as the stylesheet language, in part because
 
 Step into the newly generated folder and add the following dependencies:
 
-    npm install @angular/material @angular/cdk @angular/animations web-animations-js sanitize.css hammerjs --save
+    npm install @angular/material @angular/cdk @angular/animations sanitize.css hammerjs
     
 `material` is the [Angular implementation](https://material.angular.io/) of
 [Google's Material Design](https://material.io/guidelines/) and provides some elegant standard components.
@@ -51,9 +51,6 @@ Step into the newly generated folder and add the following dependencies:
 
 `animations` is separate from the Angular core to minimize the size for projects which do not need it,
 but it is needed for Material.
- 
-`web-animations-js` is a polyfill of the upcoming [Web Animations API](http://w3c.github.io/web-animations/)
-which is needed for many current browsers.
 
 [`sanitize.css`](https://github.com/jonathantneal/sanitize.css) is a companion project to
 [`normalize.css`](http://necolas.github.io/normalize.css/) and provides a handful of
@@ -200,20 +197,6 @@ Open the `tsconfig.json` file and add the following options:
 This sets up the TypeScript compiler to run a very tight ship, enforcing explicit declarations and null-handling.
 This may seem pedantic, but it does catch bugs and makes the code more robust.
 
-Also add
-
-    {
-      ...
-      "angularCompilerOptions": {
-        "preserveWhitespaces": false
-      },
-      ...
-    }
-
-to minimize your templates.
-
-(You can up your TypeScript version to `~2.5.3`, but it doesn't really give you much. The [2.6](https://blogs.msdn.microsoft.com/typescript/2017/10/31/announcing-typescript-2-6/) version is the juicy one,
-but Angular does not yet officially support that).
 
 Primary resources
 -----------------
@@ -261,39 +244,6 @@ Others worth considering are [member-access](https://palantir.github.io/tslint/r
 
 If you need to guard against null from 3rd-party libraries, use coercing equality (`==undefined` and `!=undefined`),
 which is explicitly allowed by these rules.
-
-(To get all these rules, you may need to update TSLint; `npm install tslint --save-dev`).
-
-no-uninitialized
-----------------
-TypeScript has an corner case where uninitialized class variables are left as `undefined` even if the type does not
-allow it.
-It is not entirely clear how this should be handled, as enforcing it consistently is both technically difficult,
-and can be pragmatically cumbersome in some common patterns.
-There is a long [GitHub discussion](https://github.com/Microsoft/TypeScript/issues/8476) about it, which has led to
-the design being revisited, but until we have some sort of built-in support, it seems the
-[tslint-strict-null-checks](https://github.com/alhugone/tslint-strict-null-checks)
-add-on can provide a useful check.
-
-    npm install tslint-strict-null-checks --save-dev
-    
-to install it, and update the `tslint.json` to include:
-
-    "rulesDirectory": [
-      ..
-      "node_modules/tslint-strict-null-checks/rules"
-    ],
-    "rules": {
-      ...
-      "no-uninitialized": [true, "properties"],
-      ...
-    }
-    
-We only check properties. TypeScript's own null-validation and inference works better for variables, ensuring that they
-are not _used_ before assignment, which is what we really want
-(rather than the stricter "must be assigned on declaration" which this rule enforces).
-
-This will be covered under the `strict` compiler option in an upcoming TypeScript release.
 
 
 GZip/imagemin
