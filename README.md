@@ -242,8 +242,32 @@ Others worth considering are [member-access](https://palantir.github.io/tslint/r
     "semicolon": [true, "always", "strict-bound-class-methods"],
     "triple-equals": [true, "allow-undefined-check"],
 
+This adopts the [TypeScript convention](https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines#null-and-undefined)
+of using `undefined` rather than `null`.
 If you need to guard against null from 3rd-party libraries, use coercing equality (`==undefined` and `!=undefined`),
 which is explicitly allowed by these rules.
+
+RxJs lint
+---------
+If you're migrating an old project, or just used to the old RxJs notation, consider adding `npm install rxjs-tslint`
+and set up the following rules in your `tslint.json`:
+
+    {
+      "rulesDirectory": [
+        ...
+        "node_modules/rxjs-tslint"
+      ],
+      "rules": {
+        ...
+        "rxjs-collapse-imports": true,
+        "rxjs-pipeable-operators-only": true,
+        "rxjs-no-static-observable-methods": true,
+        "rxjs-proper-imports": true
+      }
+    }
+    
+This gives you autofixers, and can even migrate an entire project automatically.
+See https://github.com/ReactiveX/rxjs-tslint
 
 
 GZip/imagemin
