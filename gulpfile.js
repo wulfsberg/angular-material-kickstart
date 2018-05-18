@@ -1,9 +1,11 @@
-// npm install gulp gulp-imagemin gulp-gzip gulp-brotli --save-dev
+// npm install gulp gulp-imagemin gulp-gzip gulp-brotli
 
 /*
  * These are small utility tasks to pre-zip files and optimize image compression.
  * It is not Angular-specific, but is set up to post-process the generated "dist" folder.
  */
+
+const dist = './dist/angular-material-kickstart/';
 
 const
   gulp = require('gulp'),
@@ -12,19 +14,19 @@ const
   imagemin = require('gulp-imagemin');
 
 gulp.task('gzip', () => {
-  gulp.src(['./dist/*', '!**/*.{br,gz}'])
+  gulp.src([dist + '*', '!**/*.{br,gz}'])
     .pipe(gzip())
-    .pipe(gulp.dest('./dist/'));
+    .pipe(gulp.dest(dist));
 });
 
 gulp.task('brotli', () => {
-  gulp.src(['./dist/*', '!**/*.{br,gz}'])
+  gulp.src([dist + '*', '!**/*.{br,gz}'])
     .pipe(brotli.compress())
-    .pipe(gulp.dest('./dist/'));
+    .pipe(gulp.dest(dist));
 });
 
 gulp.task('imagemin', () => {
-  gulp.src('./dist/**/*.{jpg,jpeg,png,gif,svg}')
+  gulp.src(dist + '**/*.{jpg,jpeg,png,gif,svg}')
     .pipe(imagemin())
-    .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest(dist))
 });

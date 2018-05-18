@@ -9,7 +9,7 @@ but as a cookbook/checklist for going from "nothing on the disk" to "project I c
 It is deliberately not meant as a "seed project", instead going through the additions you need to the default output
 of various tools, making it easier to apply to other versions, and to customize for your purpose.
 
-It currently matches Angular 6.0.0, Angular CLI 6.0.0 and Material 6.0.0.
+It currently matches Angular 6.0.2, Angular CLI 6.0.2 and Material 6.0.2.
 
 Prerequisites
 -------------
