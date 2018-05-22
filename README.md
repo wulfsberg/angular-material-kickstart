@@ -278,11 +278,11 @@ Reaching back in the old bag of tricks, I use some Gulp tasks (in the `gulpfile.
 
 To include the needed tools, run
 
-    npm install gulp gulp-imagemin gulp-gzip gulp-brotli --save-dev
+    npm install gulp gulp-imagemin gulp-gzip gulp-brotli
     
 I typically add the tasks to the build script in `package.json`, so it looks something like
 
-    "build": "ng build --prod --base-href=angular-material-kickstart && gulp imagemin && gulp gzip && gulp brotli",
+    "build": "ng build --prod --base-href=/angular-material-kickstart/ && gulp imagemin && gulp gzip && gulp brotli",
 
 (The `--base-href` is there because I deploy on an application path, rather than to the root of the server).
 
