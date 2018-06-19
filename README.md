@@ -249,7 +249,7 @@ which is explicitly allowed by these rules.
 
 RxJs lint
 ---------
-If you're migrating an old project, or just used to the old RxJs notation, consider adding `npm install rxjs-tslint`
+If you're migrating an old project, or just used to the old RxJs notation, consider adding `npm install rxjs-tslint --save-dev`
 and set up the following rules in your `tslint.json`:
 
     {
