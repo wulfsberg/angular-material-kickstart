@@ -168,6 +168,12 @@ Open the `src/styles.scss` and edit it to
 The reason this setup is split into two files is to keep mixins and function calls separate,
 so we can import and reuse the color/theme variables in our own components without triggering the function calls.
 
+### Styling non-Material components
+Angular Material will apply the style and typography to all Material components.
+If you want HTML outside those components to use the same style,
+you can add the `mat-app-background` and/or `mat-app-background` classes
+to the element. – Say, `<body class="mat-typography mat-app-background">`.
+
 ### mat-icon
 If you use `mat-icon` with Google's [Material Design Icons](https://material.io/icons/),
 you need to import the icon font, too, so add an additional import to the `styles.scss`:
