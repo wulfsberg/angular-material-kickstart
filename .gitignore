@@ -1,7 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/dist
+dist/
 /tmp
 /out-tsc
 
@@ -10,6 +10,8 @@
 
 # IDEs and editors
 /.idea
+*.iml
+*.iws
 .project
 .classpath
 .c9/
@@ -27,16 +29,33 @@
 # misc
 /.sass-cache
 /connect.lock
-/coverage
+coverage/
 /libpeerconnection.log
 npm-debug.log
+yarn-error.log
 testem.log
 /typings
-
-# e2e
-/e2e/*.js
-/e2e/*.map
+logs/
 
 # System Files
 .DS_Store
 Thumbs.db
+
+# Java-specific tooling:
+# Maven
+log/
+target/
+.flattened-pom.xml
+
+# Automated pom rewrite
+pom.xml.bak
+
+# Gradle
+.gradle/
+build/
+
+# A Gradle/IntelliJ/Tomcat combination uses this folder to deploy files
+classes/
+
+# Generated reports
+jgiven-reports/

@@ -9,7 +9,7 @@ but as a cookbook/checklist for going from "nothing on the disk" to "project I c
 It is deliberately not meant as a "seed project", instead going through the additions you need to the default output of
 various tools, making it easier to apply to other versions, and to customize for your purpose.
 
-It currently matches Angular 6.1.0, Angular CLI 6.1.1 and Material 6.4.1.
+This currently matches schematics-driven installation of Angular 7.0.3.
 
 Prerequisites
 -------------
@@ -41,52 +41,39 @@ project may be large enough to warrant its own prefix.
 
 We use [SASS](http://sass-lang.com/) as the stylesheet language, in part because it works well with Material Design.
 
-Step into the newly generated folder and add the following dependencies:
+The installation will ask you whether to add Routing functionality, adding a bit of relevant skeleton code if you choose
+so.
 
-    npm install @angular/material @angular/cdk @angular/animations sanitize.css hammerjs
+Step into the newly generated folder and add Angular Material
+
+    ng add @angular/material
     
-`material` is the [Angular implementation](https://material.angular.io/) of
-[Google's Material Design](https://material.io/guidelines/) and provides some elegant standard components.
+This will pull in a couple of dependencies and tweak the code as needed for Material features, giving you a couple of
+options:
 
-`cdk` is the Angular Component Development Kit, an underlying part of the Material project.
+* The install will first ask you for a theme. We will be tweaking this a bit, so choose `Custom`.
 
-`animations` is separate from the Angular core to minimize the size for projects which do not need it,
-but it is needed for Material.
+* [`HammerJS`](http://hammerjs.github.io/) provides gesture support, such as swipe and pinch. A couple of the Material
+components support this, so you probably want this to get full functionality.
+  
+* `animations` is separate from the Angular core to minimize the size for projects which do not need it, but you almost
+certainly want it for Material.
+
+I like to additionally add 
+
+    npm install sanitize.css
 
 [`sanitize.css`](https://github.com/jonathantneal/sanitize.css) is a companion project to
 [`normalize.css`](http://necolas.github.io/normalize.css/) and provides a handful of
 so-sensible-they-are-de-facto-standard rules on top of the normalization.
 Notably, this includes using the border-box model and collapsing table borders.
-It is less of an issue when using the Material project, but is still a nice help when doing other CSS work.
+It is not needed if sticking entirely to Material components, but is still a nice help when doing other CSS work.
 
-[`hammerjs`](http://hammerjs.github.io/) provides gesture support, such as swipe and pinch. A couple of the Material
-components support this, so we include the library to get full functionality.
 
 Enable polyfills
 ----------------
 To enable the needed polyfills, open the `src/polyfills.ts` file and uncomment as needed.
 
-Enable animations
------------------
-The animations module needs to be imported in the `src/app/app.module.ts`:
-
-    import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-    ...
-    imports: [
-      ...
-      BrowserAnimationsModule,
-      ...
-    ]
-    ...
-    
-Enable gestures
----------------
-Like the animations, the Hammer.js gesture support needs to be explicitly imported to be activated, so add this to the
-`src/app/app.module.ts`:
-
-    ...
-    import 'hammerjs';
-    ...
 
 Set locale
 ----------
@@ -98,53 +85,28 @@ entries which require [a lot of redundancy](https://github.com/angular/angular-c
 `application.json`, but you can still include, register and provide the locale in the source code.
 Edit the `src/app/app.module.ts` to include
 
+    ...
     import { registerLocaleData } from '@angular/common';
     import locale from '@angular/common/locales/da';
     import { LOCALE_ID, NgModule } from '@angular/core';
-    
+    ...
     registerLocaleData(locale);
     ...
-    providers: [{provide: LOCALE_ID, useValue: 'da-DK'}],
-    ...
-
-app.module.ts in total
-----------------------
-For an overview, the `app.module.ts` ends up looking something like this: 
-
-    import { registerLocaleData } from '@angular/common';
-    import locale from '@angular/common/locales/da';
-    import { LOCALE_ID, NgModule } from '@angular/core';
-    import { BrowserModule } from '@angular/platform-browser';
-    import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-    import 'hammerjs';
-    import { AppComponent } from './app.component';
-    
-    registerLocaleData(locale);
-    
-    @NgModule({
-      declarations: [
-        AppComponent
-      ],
-      imports: [
-        BrowserModule,
-        BrowserAnimationsModule
-      ],
       providers: [{provide: LOCALE_ID, useValue: 'da-DK'}],
-      bootstrap: [AppComponent]
-    })
-    export class AppModule {
-    }
+    ...
 
 
 Configure CSS/Material palettes
 -------------------------------
 Create a `src/theme.scss` file containing
 
-    @import "~@angular/material/theming";
-    $primary: mat-palette($mat-indigo);
-    $accent:  mat-palette($mat-pink);
-    $warn:    mat-palette($mat-red);
-    $theme: mat-light-theme($primary, $accent, $warn);
+    @import '~@angular/material/theming';
+    $reference-primary: mat-palette($mat-indigo);
+    $reference-accent: mat-palette($mat-pink, A200, A100, A400);
+    $reference-warn: mat-palette($mat-red);
+    $reference-theme: mat-light-theme($reference-primary, $reference-accent, $reference-warn);
+    
+and delete the similar `$reference-...` lines in `src/styles.scss`.
 
 This sets up the Material Design theme as per the [theming guide](https://material.angular.io/guide/theming).
 You can choose some of the official
@@ -152,19 +114,22 @@ You can choose some of the official
 or you can define your own palettes. (A tool like Mikel Bitson's
 [Material Design Palette Generator](http://mcg.mbitson.com/) can help you get started on your own palettes).
 
+The reason for moving the palette definition into a separate file is to keep mixins and function calls separate, so we
+can import and reuse the color/theme variables in our own components/SCSS without triggering the function calls.
+(Notably, the `@include mat-core();` which, as the comments say, should only ever be included once).
+
 Open the `src/styles.scss` and edit it to
 
     @import "~sanitize.css/sanitize.css";
-    @import "~@angular/material/theming";
+    @import '~@angular/material/theming';
     @import "./theme";
-    
     @include mat-core(mat-typography-config(
       $font-family: 'Comic Sans MS' /* Ok, perhaps not */
     ));
-    @include angular-material-theme($theme);
+    @include angular-material-theme($reference-theme);    
+    html, body { height: 100%; }
+    body { margin: 0; }
 
-The reason this setup is split into two files is to keep mixins and function calls separate, so we can import and reuse
-the color/theme variables in our own components without triggering the function calls.
 
 ### Styling non-Material components
 Angular Material will apply the style and typography to all Material components.
@@ -229,10 +194,9 @@ Useful packages
 
 TSLint
 ======
-The `tslint.json` settings are very much a matter of opinion. One you can pretty safely add, however, is the
-[no-conditional-assignment](https://palantir.github.io/tslint/rules/no-conditional-assignment/).    
-
-Others worth considering are [member-access](https://palantir.github.io/tslint/rules/member-access/),
+The `tslint.json` settings are very much a matter of opinion. Options worth considering are
+[no-conditional-assignment](https://palantir.github.io/tslint/rules/no-conditional-assignment/),
+[member-access](https://palantir.github.io/tslint/rules/member-access/),
 [no-null-keyword](https://palantir.github.io/tslint/rules/no-null-keyword/) and
 [no-this-assignment](https://palantir.github.io/tslint/rules/no-this-assignment/); and updating 
 [arrow-return-shorthand](https://palantir.github.io/tslint/rules/arrow-return-shorthand/),
@@ -254,32 +218,10 @@ of using `undefined` rather than `null`.
 If you need to guard against null from 3rd-party libraries, use coercing equality (`==undefined` and `!=undefined`),
 which is explicitly allowed by these rules.
 
-RxJs lint
----------
-If you're migrating an old project, or just used to the old RxJs notation, consider adding
-`npm install rxjs-tslint --save-dev` and set up the following rules in your `tslint.json`:
-
-    {
-      "rulesDirectory": [
-        ...
-        "node_modules/rxjs-tslint"
-      ],
-      "rules": {
-        ...
-        "rxjs-collapse-imports": true,
-        "rxjs-pipeable-operators-only": true,
-        "rxjs-no-static-observable-methods": true,
-        "rxjs-proper-imports": true
-      }
-    }
-    
-This gives you autofixers, and can even migrate an entire project automatically.
-See https://github.com/ReactiveX/rxjs-tslint
-
 
 GZip/imagemin
 =============
-Reaching back in the old bag of tricks, I use some Gulp tasks (in the `gulpfile.js`) to optimize the generated  assets
+Reaching back in the old bag of tricks, I use some Gulp tasks (in the `gulpfile.js`) to optimize the generated assets
 by recompressing images and pre-compressing the files, since many servers can be set up to automatically deliver the
 `.gz` or `.br` version of files if they exist and the browser supports it.
 
