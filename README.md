@@ -82,8 +82,8 @@ appropriate locale file in the build.
 
 The compile-time way (previously simply `--locale=...`) has been replaced with so far poorly documented configuration
 entries which require [a lot of redundancy](https://github.com/angular/angular-cli/issues/10612) in the
-`application.json`, but you can still include, register and provide the locale in the source code.
-Edit the `src/app/app.module.ts` to include
+`application.json`, but you can still use the runtime way by including, registering and providing the locale in the
+source code. Edit the `src/app/app.module.ts` to include
 
     ...
     import { registerLocaleData } from '@angular/common';
@@ -101,12 +101,12 @@ Configure CSS/Material palettes
 Create a `src/theme.scss` file containing
 
     @import '~@angular/material/theming';
-    $reference-primary: mat-palette($mat-indigo);
-    $reference-accent: mat-palette($mat-pink, A200, A100, A400);
-    $reference-warn: mat-palette($mat-red);
-    $reference-theme: mat-light-theme($reference-primary, $reference-accent, $reference-warn);
+    $projectname-primary: mat-palette($mat-indigo);
+    $projectname-accent: mat-palette($mat-pink, A200, A100, A400);
+    $projectname-warn: mat-palette($mat-red);
+    $projectname-theme: mat-light-theme($projectname-primary, $projectname-accent, $projectname-warn);
     
-and delete the similar `$reference-...` lines in `src/styles.scss`.
+and delete the similar `$projectname-...` lines in `src/styles.scss`.
 
 This sets up the Material Design theme as per the [theming guide](https://material.angular.io/guide/theming).
 You can choose some of the official
@@ -126,7 +126,7 @@ Open the `src/styles.scss` and edit it to
     @include mat-core(mat-typography-config(
       $font-family: 'Comic Sans MS' /* Ok, perhaps not */
     ));
-    @include angular-material-theme($reference-theme);    
+    @include angular-material-theme($projectname-theme);    
     html, body { height: 100%; }
     body { margin: 0; }
 
@@ -170,28 +170,6 @@ This sets up the TypeScript compiler to run a very tight ship, enforcing explici
 This may seem pedantic, but it does catch bugs and makes the code more robust.
 
 
-Primary resources
------------------
- * [Angular](https://angular.io/docs/ts/latest/) and its [GitHub repository](https://github.com/angular/angular)
- * [Angular CLI](https://cli.angular.io/) and its [GitHub repository](https://github.com/angular/angular-cli).
-   (The most relevant documentation is on the project's [GitHub Wiki](https://github.com/angular/angular-cli/wiki))
- * [Angular Material Design](https://material.angular.io/components) and its [GitHub](https://github.com/angular/material2).
- 
-
-Additional tools
-----------------
-The [Augury Chrome plug-in](https://augury.angular.io/) provides additional runtime inspection of a project, much like
-the development console does for "normal" HTML.
-
-Useful packages
----------------
- * [`moment.js`](https://momentjs.com/) is highly useful for doing date manipulation and parsing/formatting, in 
- particular if you also need to handle time zones (using [`moment-timezone.js`](https://momentjs.com/timezone/)), and
- it will feel familiar if you're used to Joda-Time or Java 8's date/time API.
- * [`anchorme`](https://alexcorvi.github.io/anchorme.js/) is a "linkifier" which turns links in text into clickable
- markup, and seems to strike a good balance between features and (ease of) configuration.
-
-
 TSLint
 ======
 The `tslint.json` settings are very much a matter of opinion. Options worth considering are
@@ -217,6 +195,30 @@ This adopts the [TypeScript convention](https://github.com/Microsoft/TypeScript/
 of using `undefined` rather than `null`.
 If you need to guard against null from 3rd-party libraries, use coercing equality (`==undefined` and `!=undefined`),
 which is explicitly allowed by these rules.
+
+
+Primary resources
+-----------------
+ * [Angular](https://angular.io/docs/ts/latest/) and its [GitHub repository](https://github.com/angular/angular)
+ * [Angular CLI](https://cli.angular.io/) and its [GitHub repository](https://github.com/angular/angular-cli).
+   (The documentation is moving to the main Angular site, but the project's [GitHub Wiki](https://github.com/angular/angular-cli/wiki)
+   still has more information, in particular the [stories](https://github.com/angular/angular-cli/wiki/stories))
+
+ * [Angular Material Design](https://material.angular.io/components) and its [GitHub](https://github.com/angular/material2).
+ 
+
+Additional tools
+----------------
+The [Augury Chrome plug-in](https://augury.angular.io/) provides additional runtime inspection of a project, much like
+the development console does for "normal" HTML.
+
+Useful packages
+---------------
+ * [`moment.js`](https://momentjs.com/) is highly useful for doing date manipulation and parsing/formatting, in 
+ particular if you also need to handle time zones (using [`moment-timezone.js`](https://momentjs.com/timezone/)), and
+ it will feel familiar if you're used to Joda-Time or Java 8's date/time API.
+ * [`anchorme`](https://alexcorvi.github.io/anchorme.js/) is a "linkifier" which turns links in text into clickable
+ markup, and seems to strike a good balance between features and (ease of) configuration.
 
 
 GZip/imagemin
