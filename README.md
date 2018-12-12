@@ -80,8 +80,9 @@ Set locale
 To ensure that locale-specific pipes (such as date or number format) use the correct locale, you need to include the
 appropriate locale file in the build.
 
-The compile-time way (previously simply `--locale=...`) has been replaced with so far poorly documented configuration
-entries which require [a lot of redundancy](https://github.com/angular/angular-cli/issues/10612) in the
+The compile-time way (previously simply `--locale=...`) has been replaced with so far
+[poorly documented](https://github.com/angular/angular/issues/26052) configuration entries which require
+[a lot of redundancy](https://github.com/angular/angular-cli/issues/10612) in the
 `application.json`, but you can still use the runtime way by including, registering and providing the locale in the
 source code. Edit the `src/app/app.module.ts` to include
 
@@ -199,7 +200,7 @@ which is explicitly allowed by these rules.
 
 Primary resources
 -----------------
- * [Angular](https://angular.io/docs/ts/latest/) and its [GitHub repository](https://github.com/angular/angular)
+ * [Angular](https://angular.io/docs) and its [GitHub repository](https://github.com/angular/angular)
  * [Angular CLI](https://cli.angular.io/) and its [GitHub repository](https://github.com/angular/angular-cli).
    (The documentation is moving to the main Angular site, but the project's [GitHub Wiki](https://github.com/angular/angular-cli/wiki)
    still has more information, in particular the [stories](https://github.com/angular/angular-cli/wiki/stories))
@@ -211,6 +212,9 @@ Additional tools
 ----------------
 The [Augury Chrome plug-in](https://augury.angular.io/) provides additional runtime inspection of a project, much like
 the development console does for "normal" HTML.
+
+The [Angular Console](https://angularconsole.com/) is a visual facade to the Angular CLI and it's `angular.json`
+configuration, which may make it easier to remember the different options, depending on your preferred style.
 
 Useful packages
 ---------------
