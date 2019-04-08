@@ -147,6 +147,9 @@ If you use `mat-icon` with Google's [Material Design Icons](https://material.io/
        ...
      </head>
 
+**Note**: Newer versions of the schematics add this link when you add `@angular/material`.  
+If you have set up your own font in the `mat-typography-config` above, remove any font link from the `head` (or replace
+it with your own if needed).
 
 Configure TypeScript
 --------------------
@@ -206,14 +209,13 @@ Primary resources
    still has more information, in particular the [stories](https://github.com/angular/angular-cli/wiki/stories))
 
  * [Angular Material Design](https://material.angular.io/components) and its [GitHub](https://github.com/angular/material2).
- 
 
 Additional tools
 ----------------
 The [Augury Chrome plug-in](https://augury.angular.io/) provides additional runtime inspection of a project, much like
 the development console does for "normal" HTML.
 
-The [Angular Console](https://angularconsole.com/) is a visual facade to the Angular CLI and it's `angular.json`
+The [Angular Console](https://angularconsole.com/) is a visual facade to the Angular CLI and its `angular.json`
 configuration, which may make it easier to remember the different options, depending on your preferred style.
 
 Useful packages
@@ -233,7 +235,7 @@ by recompressing images and pre-compressing the files, since many servers can be
 
 To include the needed tools, run
 
-    npm install gulp gulp-imagemin gulp-gzip gulp-brotli --save-dev
+    npm install gulp@^3.9.1 gulp-imagemin gulp-gzip gulp-brotli --save-dev
     
 Make sure to create and update the `gulpfile.js` to match your project name.
     
