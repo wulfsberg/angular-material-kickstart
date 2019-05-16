@@ -235,7 +235,7 @@ by recompressing images and pre-compressing the files, since many servers can be
 
 To include the needed tools, run
 
-    npm install gulp@^3.9.1 gulp-imagemin gulp-gzip gulp-brotli --save-dev
+    npm install gulp@^3 gulp-imagemin@^4 gulp-gzip@^1 gulp-brotli@^1 --save-dev
     
 Make sure to create and update the `gulpfile.js` to match your project name.
     

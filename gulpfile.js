@@ -1,4 +1,4 @@
-// npm install gulp@^3.9.1 gulp-imagemin gulp-gzip gulp-brotli --save-dev
+// npm install gulp@^3 gulp-imagemin@^4 gulp-gzip@^1 gulp-brotli@^1 --save-dev
 
 /*
  * These are small utility tasks to pre-zip files and optimize image compression.
