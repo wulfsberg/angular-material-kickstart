@@ -42,7 +42,9 @@ project may be large enough to warrant its own prefix.
 We use [SASS](http://sass-lang.com/) as the stylesheet language, in part because it works well with Material Design.
 
 The installation will ask you whether to add Routing functionality, adding a bit of relevant skeleton code if you choose
-so.
+so.  
+ – I find that almost all projects benefit from the deep-linking capabilities of the router, so I'd recommend
+installing it, even if it does add a bit of mental overhead initially.
 
 Step into the newly generated folder and add Angular Material
 
