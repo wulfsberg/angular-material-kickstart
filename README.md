@@ -9,7 +9,7 @@ but as a cookbook/checklist for going from "nothing on the disk" to "project I c
 It is deliberately not meant as a "seed project", instead going through the additions you need to the default output of
 various tools, making it easier to apply to other versions, and to customize for your purpose.
 
-This currently matches schematics-driven installation of Angular 7.0.3.
+This currently matches the schematics-driven installation of Angular 7.0.3 and onwards, tested up to 8.2.0.
 
 Prerequisites
 -------------
@@ -80,11 +80,10 @@ Set locale
 To ensure that locale-specific pipes (such as date or number format) use the correct locale, you need to include the
 appropriate locale file in the build.
 
-The compile-time way (previously simply `--locale=...`) has been replaced with so far
-[poorly documented](https://github.com/angular/angular/issues/26052) configuration entries which require
-[a lot of redundancy](https://github.com/angular/angular-cli/issues/10612) in the
-`application.json`, but you can still use the runtime way by including, registering and providing the locale in the
-source code. Edit the `src/app/app.module.ts` to include
+If you do not need full internationalization with multiple languages, but just local formats, the easiest way is to
+set it up in the code rather than creating multiple build configurations.
+
+Edit the `src/app/app.module.ts` to include
 
     ...
     import { registerLocaleData } from '@angular/common';
@@ -107,7 +106,7 @@ Create a `src/theme.scss` file containing
     $projectname-warn: mat-palette($mat-red);
     $projectname-theme: mat-light-theme($projectname-primary, $projectname-accent, $projectname-warn);
     
-and delete the similar `$projectname-...` lines in `src/styles.scss`.
+(and delete the similar `$projectname-...` lines in `src/styles.scss`. See below.)
 
 This sets up the Material Design theme as per the [theming guide](https://material.angular.io/guide/theming).
 You can choose some of the official
