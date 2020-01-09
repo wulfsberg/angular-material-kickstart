@@ -180,11 +180,12 @@ TSLint
 The `tslint.json` settings are very much a matter of opinion. Options worth considering are
 [no-conditional-assignment](https://palantir.github.io/tslint/rules/no-conditional-assignment/),
 [member-access](https://palantir.github.io/tslint/rules/member-access/),
-[no-null-keyword](https://palantir.github.io/tslint/rules/no-null-keyword/) and
-[no-this-assignment](https://palantir.github.io/tslint/rules/no-this-assignment/); and updating 
+[no-null-keyword](https://palantir.github.io/tslint/rules/no-null-keyword/),
+[no-this-assignment](https://palantir.github.io/tslint/rules/no-this-assignment/) and
+[variable-name](https://palantir.github.io/tslint/rules/variable-name/); and updating 
 [arrow-return-shorthand](https://palantir.github.io/tslint/rules/arrow-return-shorthand/),
 [semicolon](https://palantir.github.io/tslint/rules/semicolon/),
-[quotemark](https://palantir.github.io/tslint/rules/quotemark/) and
+[quotemark](https://palantir.github.io/tslint/rules/quotemark/),
 [triple-equals](https://palantir.github.io/tslint/rules/triple-equals/):
 
     "arrow-return-shorthand": [true, "multiline"],
@@ -195,6 +196,7 @@ The `tslint.json` settings are very much a matter of opinion. Options worth cons
     "quotemark": [true, "single", "avoid-escape", "avoid-template"],
     "semicolon": [true, "always", "strict-bound-class-methods"],
     "triple-equals": [true, "allow-undefined-check"],
+    "variable-name": { "options": ["check-format", "ban-keywords", "require-const-for-all-caps", "allow-leading-underscore"]},
 
 This adopts the [TypeScript convention](https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines#null-and-undefined)
 of using `undefined` rather than `null`.
@@ -236,13 +238,13 @@ by recompressing images and pre-compressing the files, since many servers can be
 
 To include the needed tools, run
 
-    npm install gulp@^3 gulp-imagemin@^4 gulp-gzip@^1 gulp-brotli@^1 --save-dev
+    npm install gulp@^4 gulp-imagemin@^6 gulp-gzip@^1 gulp-brotli@^1 --save-dev
     
 Make sure to create and update the `gulpfile.js` to match your project name.
     
 I typically add the tasks to the build script in `package.json`, so it looks something like
 
-    "build": "ng build --prod --base-href=/angular-material-kickstart/ && gulp imagemin && gulp gzip && gulp brotli",
+    "build": "ng build --prod --base-href=/angular-material-kickstart/ && gulp",
 
 (The `--base-href` is there because I deploy on an application path, rather than to the root of the server).
 
