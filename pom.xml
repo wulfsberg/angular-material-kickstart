@@ -43,7 +43,7 @@
           <warSourceDirectory>${basedir}/java-src/main/webapp</warSourceDirectory>
           <webResources>
             <resource>
-              <directory>dist/angular-material-kickstart</directory>
+              <directory>dist/angular-material-kickstart/da</directory>
             </resource>
           </webResources>
           <webXml>${basedir}/java-src/main/webapp/WEB-INF/web.xml</webXml>

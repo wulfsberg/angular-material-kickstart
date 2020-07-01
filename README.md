@@ -9,7 +9,7 @@ but as a cookbook/checklist for going from "nothing on the disk" to "project I c
 It is deliberately not meant as a "seed project", instead going through the additions you need to the default output of
 various tools, making it easier to apply to other versions, and to customize for your purpose.
 
-This currently matches the schematics-driven installation of Angular 7.0.3 and onwards, tested up to 8.2.0.
+This currently matches the schematics-driven installation of Angular 10.0 and onwards.
 
 Prerequisites
 -------------
@@ -27,7 +27,7 @@ latest version before using it to create a project.
 Create a project
 ----------------
 
-    ng new [project-name] --prefix=[component-prefix] --style=scss
+    ng new [project-name] --prefix=[component-prefix] --style=scss --strict
     
 (**Note**: You may also want to add `--skip-git` if you use another source control system or prefer to initialize it in
 other ways).
@@ -41,8 +41,13 @@ project may be large enough to warrant its own prefix.
 
 We use [SASS](http://sass-lang.com/) as the stylesheet language, in part because it works well with Material Design.
 
-The installation will ask you whether to add Routing functionality, adding a bit of relevant skeleton code if you choose
-so.  
+`--strict` sets up several TypeScript options which I would recommend anyway. Be aware that this also sets up your project
+as "side-effect free", which can mess up 3rd party imports if they actually do rely on side effects. Most modern
+libraries should be written in a purer style, though, so you can probably enable this, or in worst case
+[designate
+ specific files as having side effects](https://webpack.js.org/guides/tree-shaking/#mark-the-file-as-side-effect-free).
+
+The installation will ask whether to add Routing functionality, adding a bit of relevant skeleton code if you choose so.  
  – I find that almost all projects benefit from the deep-linking capabilities of the router, so I'd recommend
 installing it, even if it does add a bit of mental overhead initially.
 
@@ -55,8 +60,10 @@ options:
 
 * The install will first ask you for a theme. We will be tweaking this a bit, so choose `Custom`.
 
-* [`HammerJS`](http://hammerjs.github.io/) provides gesture support, such as swipe and pinch. A couple of the Material
-components support this, so you probably want this to get full functionality.
+* When asking whether to "set up global Angular Material typography styles", say yes. Practically, this simply adds the
+`mat-typography` class to the `body` tag, making non-Material components use the same font. Indeed, you may want to
+manually add the 'mat-app-background' class to the `body` tag too, to make the background in non-material areas match
+the app style.
   
 * `animations` is separate from the Angular core to minimize the size for projects which do not need it, but you almost
 certainly want it for Material.
@@ -74,28 +81,49 @@ It is not needed if sticking entirely to Material components, but is still a nic
 
 Enable polyfills
 ----------------
-To enable the needed polyfills, open the `src/polyfills.ts` file and uncomment as needed.
+To enable the needed polyfills, open the `src/polyfills.ts` file and uncomment as needed. Unless you have a special
+case and are targeting older browsers, you probably do not need to adjust this.
 
 
 Set locale
 ----------
-To ensure that locale-specific pipes (such as date or number format) use the correct locale, you need to include the
-appropriate locale file in the build.
+Full translations using the i18n tools which Angular provides is a little out of scope for this setup, but you may
+still want to set up the project to ensure that locale-specific pipes (such as date or number format) use the correct
+format.
 
-If you do not need full internationalization with multiple languages, but just local formats, the easiest way is to
-set it up in the code rather than creating multiple build configurations.
+To do so, add
 
-Edit the `src/app/app.module.ts` to include
+    ng add @angular/localize
 
-    ...
-    import { registerLocaleData } from '@angular/common';
-    import locale from '@angular/common/locales/da';
-    import { LOCALE_ID, NgModule } from '@angular/core';
-    ...
-    registerLocaleData(locale);
-    ...
-      providers: [{provide: LOCALE_ID, useValue: 'da-DK'}],
-    ...
+to get access to the locale definitions (as [seen here](https://github.com/angular/angular/tree/master/packages/common/locales)).
+
+Edit your `angular.json` file, adding
+
+    {
+       ...
+      "projects": {
+        "[project-name]": {
+          "i18n": {
+            "sourceLocale": "da"
+          },
+          ...
+        "architect": {
+          "build": {
+            ...
+            "options": {
+              "localize": true,
+              ...
+            }
+          ...
+        }
+        ...
+      }
+    }
+             
+i.e. add the `i18n` block to the project definition, and the `"localize": true` option to the `architect/build/options`
+which serve as the default for all configurations.  
+(Be aware that once you invoke the i18n options like this, your built files will start showing up in a locale-specific
+folder under `dist`, e.g. `dist/da`).
 
 
 Configure CSS/Material palettes
@@ -132,52 +160,36 @@ Open the `src/styles.scss` and edit it to
     html, body { height: 100%; }
     body { margin: 0; }
 
+### mat-icon and default font
+The schematics will set up a stylesheet link to [Material Design Icons](https://material.io/icons/) in the `index.html`.
+If you do not use Material icons, you can delete this link. (`<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">`)
 
-### Styling non-Material components
-Angular Material will apply the style and typography to all Material components.
-If you want HTML outside those components to use the same style, you can add the `mat-typography` and/or
-`mat-app-background` classes to the element. – Say, `<body class="mat-typography mat-app-background">`.
-
-### mat-icon
-If you use `mat-icon` with Google's [Material Design Icons](https://material.io/icons/), add a stylesheet link to
-`index.html` to launch an asynchronous fetch of the external resources as early as possible:
-
-    <head>
-       ...
-       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-       ...
-     </head>
-
-**Note**: Newer versions of the schematics add this link when you add `@angular/material`.  
-If you have set up your own font in the `mat-typography-config` above, remove any font link from the `head` (or replace
-it with your own if needed).
+Similarly, if you have set up your own font in the `mat-typography-config` above, remove any font link from the `head`,
+or replace it with your own if needed.
 
 Configure TypeScript
 --------------------
-Open the `tsconfig.json` file and add the following options:
+The `--strict` has already set up TypeScript to run a tight ship, but I prefer to add a bit more.
+Open the `tsconfig.base.json` file and add the following options:
 
     {
       ...
       "compilerOptions": {
         ...
-        "forceConsistentCasingInFileNames": true,
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitReturns": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "strict": true,
         ...
       }
       ...
     }
 
-This sets up the TypeScript compiler to run a very tight ship, enforcing explicit declarations and null-handling.
-This may seem pedantic, but it does catch bugs and makes the code more robust.
+This is a bit of a matter of taste. Some find it annoying that they cannot leave variables around while working on the
+code, but I find that forcing yourself to express what you actually mean pays off in the long run. 
 
 
 TSLint
 ======
-The `tslint.json` settings are very much a matter of opinion. Options worth considering are
+Simlarly, the `tslint.json` settings are very much a matter of opinion. Options worth considering are
 [no-conditional-assignment](https://palantir.github.io/tslint/rules/no-conditional-assignment/),
 [member-access](https://palantir.github.io/tslint/rules/member-access/),
 [no-null-keyword](https://palantir.github.io/tslint/rules/no-null-keyword/),

@@ -7,20 +7,19 @@
 
 const dist = './dist/angular-material-kickstart/';
 
-const
-  {src, dest, parallel, series} = require('gulp'),
+const {src, dest, parallel, series} = require('gulp'),
   gulpGzip = require('gulp-gzip'),
   gulpBrotli = require('gulp-brotli'),
   gulpImagemin = require('gulp-imagemin');
 
 function gzip() {
-  return src([dist + '*', '!**/*.{br,gz}'])
+  return src([dist + '**/*.{js,html}'])
     .pipe(gulpGzip())
     .pipe(dest(dist));
 }
 
 function brotli() {
-  return src([dist + '*', '!**/*.{br,gz}'])
+  return src([dist + '**/*.{js,html}'])
     .pipe(gulpBrotli.compress())
     .pipe(dest(dist));
 }
