@@ -102,7 +102,7 @@ Edit your `angular.json` file, adding
     {
       ...
       "projects": {
-        "linear-search-frontend": {
+        "[project-name]": {
           "i18n": {
             "locales": {
               "da": {
