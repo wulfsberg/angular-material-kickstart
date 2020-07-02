@@ -87,7 +87,7 @@ case and are targeting older browsers, you probably do not need to adjust this.
 
 Set locale
 ----------
-Full translations using the i18n tools which Angular provides is a little out of scope for this setup, but you may
+Full translation using the i18n tools which Angular provides is a little out of scope for this setup, but you may
 still want to set up the project to ensure that locale-specific pipes (such as date or number format) use the correct
 format.
 
@@ -100,30 +100,41 @@ to get access to the locale definitions (as [seen here](https://github.com/angul
 Edit your `angular.json` file, adding
 
     {
-       ...
+      ...
       "projects": {
-        "[project-name]": {
+        "linear-search-frontend": {
           "i18n": {
-            "sourceLocale": "da"
+            "locales": {
+              "da": {
+                "translation": "",
+                "baseHref": ""
+              }
+            }
           },
           ...
-        "architect": {
-          "build": {
-            ...
-            "options": {
-              "localize": true,
+          "architect": {
+            "build": {
               ...
-            }
-          ...
-        }
+              "options": {
+                "localize": ["da"],
+                ...
+              },
+              ...
+            },
+            ...
+          }
+        },
         ...
-      }
+      },
+      ...
     }
-             
-i.e. add the `i18n` block to the project definition, and the `"localize": true` option to the `architect/build/options`
-which serve as the default for all configurations.  
-(Be aware that once you invoke the i18n options like this, your built files will start showing up in a locale-specific
-folder under `dist`, e.g. `dist/da`).
+                 
+i.e. add the `i18n` block to the project definition, and the `"localize": ["da"]` option to the `architect/build/options`
+which serve as the default for all configurations.
+This sets up a Danish build profile which has no actual translation file, and does not modify the `baseHref`, and we
+use this localization profile as the default for all builds.
+(Be aware that the output folder of the compiled files will still include the locale name, e.g. `dist/da`, so copy
+the files from this deeper level when you deploy them).
 
 
 Configure CSS/Material palettes
