@@ -138,13 +138,19 @@ the files from this deeper level when you deploy them).
 
 Configure CSS/Material palettes
 -------------------------------
-Create a `src/theme.scss` file containing
+Create a `src/theme.scss` file and move the theme definitions from `src/styles.scss` into it:
 
     @import '~@angular/material/theming';
     $projectname-primary: mat-palette($mat-indigo);
     $projectname-accent: mat-palette($mat-pink, A200, A100, A400);
     $projectname-warn: mat-palette($mat-red);
-    $projectname-theme: mat-light-theme($projectname-primary, $projectname-accent, $projectname-warn);
+    $projectname-theme: mat-light-theme((
+      color: (
+        primary: $projectname-primary,
+        accent: $projectname-accent,
+        warn: $projectname-warn,
+      )
+    ));
     
 (and delete the similar `$projectname-...` lines in `src/styles.scss`. See below.)
 
