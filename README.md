@@ -61,9 +61,9 @@ options:
 * The install will first ask you for a theme. We will be tweaking this a bit, so choose `Custom`.
 
 * When asking whether to "set up global Angular Material typography styles", say yes. Practically, this simply adds the
-`mat-typography` class to the `body` tag, making non-Material components use the same font. Indeed, you may want to
-manually add the 'mat-app-background' class to the `body` tag too, to make the background in non-material areas match
-the app style.
+`mat-typography`class to the `body` tag, making non-Material components use the same font. Indeed, you may want to
+manually add the `mat-app-background` class to the `body` tag too, to make the background color in non-material areas
+match the app style.
   
 * `animations` is separate from the Angular core to minimize the size for projects which do not need it, but you almost
 certainly want it for Material.
@@ -131,8 +131,7 @@ Edit your `angular.json` file, adding
                  
 i.e. add the `i18n` block to the project definition, and the `"localize": ["da"]` option to the `architect/build/options`
 which serve as the default for all configurations.
-This sets up a Danish build profile which has no actual translation file, and does not modify the `baseHref`, and we
-use this localization profile as the default for all builds.
+This sets up a Danish build profile which has no actual translation file, and does not modify the `baseHref`.
 (Be aware that the output folder of the compiled files will still include the locale name, e.g. `dist/da`, so copy
 the files from this deeper level when you deploy them).
 
@@ -180,7 +179,7 @@ or replace it with your own if needed.
 
 Configure TypeScript
 --------------------
-The `--strict` has already set up TypeScript to run a tight ship, but I prefer to add a bit more.
+The `--strict` option has already set up TypeScript to run a tight ship, but I prefer to add a bit more.
 Open the `tsconfig.base.json` file and add the following options:
 
     {
@@ -194,8 +193,10 @@ Open the `tsconfig.base.json` file and add the following options:
       ...
     }
 
-This is a bit of a matter of taste. Some find it annoying that they cannot leave variables around while working on the
-code, but I find that forcing yourself to express what you actually mean pays off in the long run. 
+This is somewhat a matter of taste. Some find this too strict, becoming an annoyance while working on the code.
+Pragmatically, though, you will never get around to actually cleaning up such things unless you do it while you're
+writing the code initially, so this strict setting ensures that dead legacy code does not accumulate and confuse people
+later. 
 
 
 TSLint
@@ -297,8 +298,8 @@ To generate the compiled and bundled Angular application, run
     ng build --prod --base-href=[path-to-app]
     
 where `[path-to-app]` is the address your web app is deployed to on the server (typically the **.war** name).
-This overrides the `<base href="/">` in `index.html`, ensuring that relative file names are picked up from the correct
-path.
+This overrides the `<base href="/">` in `index.html`, ensuring that relative file names are based upon the correct
+root path.
 
 (As mentioned above, I recommend setting this command up as a script in the `package.json`, to avoid typos and ensure
 consistency).
@@ -322,33 +323,36 @@ that to show the application entry point.
 
 We could simply point the error page to our `index.html`, but this would mean that it would still be served with status
 code 404. While this will actually work, it is not pretty.
-So instead, we edit the `web.xml` to configure our error page for 404 to be a **.jsp**.
-We also need additional configuration to ensure that the JSP compiler handles the files as UTF-8 rather than the
-default ISO-8859-1:
+Instead, we deliver the `index.html` through a Servlet where we can control the HTTP status code. This also has the
+benefit of letting us control other headers as well (such as `Content-Security-Policy`)
 
-    ...
-    <jsp-config>
-      <jsp-property-group>
-        <url-pattern>*.html</url-pattern>
-        <page-encoding>utf-8</page-encoding>
-      </jsp-property-group>
-      <jsp-property-group>
-        <url-pattern>*.jsp</url-pattern>
-        <page-encoding>utf-8</page-encoding>
-      </jsp-property-group>
-    </jsp-config>
-    <error-page>
-      <error-code>404</error-code>
-      <location>/index.jsp</location>
-    </error-page>
-    ...
+    <web-app
+      xmlns="http://java.sun.com/xml/ns/javaee"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+      version="3.0">
+      <error-page>
+        <error-code>404</error-code>
+        <location>/index.html</location>
+      </error-page>
+      <servlet>
+        <servlet-name>IndexServlet</servlet-name>
+        <servlet-class>dk.wolfsbane.angularmaterialkickstart.IndexServlet</servlet-class>
+        <init-param>
+          <param-name>Content-Security-Policy</param-name>
+          <param-value>default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.northtech.dk; frame-ancestors 'none'</param-value>
+        </init-param>
+      </servlet>
+      <servlet-mapping>
+        <servlet-name>IndexServlet</servlet-name>
+        <url-pattern>/index.html</url-pattern>
+      </servlet-mapping>
+    </web-app>
 
-...and the `index.jsp` sets the status code and includes the original `index.html`:
-
-    <% response.setStatus(200); %><%@ include file="/index.html" %>
+(See the Git files for the actual `IndexServlet`).
     
-Now all unknown URLs will result in the server delivering the `index.html` with a status code 200, and the Angular
-application can display its own error message for incorrect routes.
+Now all unknown URLs (and `/index.html` itself) will result in the server delivering the `index.html` with a status
+code 200, and the Angular application can display its own error message for incorrect routes.
  
 Of course, this also means that if you genuinely have a missing file (say, a typo in an image name) you'll get the
 `index.html` instead, but I find this a small price to pay for avoiding the duplicated route configuration.

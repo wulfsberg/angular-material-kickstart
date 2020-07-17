@@ -3,21 +3,20 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
   version="3.0">
-  <jsp-config>
-    <!-- Make sure the server both reads the include source as UTF-8 and delivers the result as such: -->
-    <jsp-property-group>
-      <url-pattern>*.html</url-pattern>
-      <page-encoding>utf-8</page-encoding>
-    </jsp-property-group>
-    <jsp-property-group>
-      <url-pattern>*.jsp</url-pattern>
-      <page-encoding>utf-8</page-encoding>
-    </jsp-property-group>
-  </jsp-config>
   <error-page>
-    <!-- Redirect any non-handled URLs to the Angular application entry point.
-         We pipe it through a JSP to override the status code, rather than sending it as an actual 404. -->
     <error-code>404</error-code>
-    <location>/index.jsp</location>
+    <location>/index.html</location>
   </error-page>
+  <servlet>
+    <servlet-name>IndexServlet</servlet-name>
+    <servlet-class>dk.wolfsbane.angularmaterialkickstart.IndexServlet</servlet-class>
+    <init-param>
+      <param-name>Content-Security-Policy</param-name>
+      <param-value>default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.northtech.dk; frame-ancestors 'none'</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>IndexServlet</servlet-name>
+    <url-pattern>/index.html</url-pattern>
+  </servlet-mapping>
 </web-app>
