@@ -204,6 +204,40 @@ Pragmatically, though, you will never get around to actually cleaning up such th
 writing the code initially, so this strict setting ensures that dead legacy code does not accumulate and confuse people
 later. 
 
+Safari session credentials for script type="module"
+---------------------------------------------------
+If your entire site is behind a session-based access control, the browser will need to send session cookies with the
+requests for the compiled JavaScript files. Usually, this is handled automatically, but Safari does not by default send
+credentials with requests for the `module` ES6 script type.
+
+To work around this, edit the `angular.json` to include the `crossOrigin` option:
+
+    {
+      ...
+      "projects": {
+        "[YourProjectName]": {
+          ...
+          "architect": {
+            "build": {
+              ...
+              "options": {
+                "crossOrigin": "use-credentials",
+                ...
+              }
+              ...
+            }
+            ...
+          }
+        }
+      }
+      ...
+    }
+
+This adds a `crossorigin="use-credentials"` to the script tag in `index.html, per https://github.com/angular/angular-cli/issues/14743.
+
+The Safari dev team are somewhat vague about whether this is a bug and what they consider expected behavior, but given
+that it is the only browser with this interpretation, it is likely to change in the future. 
+
 
 TSLint
 ======
