@@ -9,7 +9,8 @@ but as a cookbook/checklist for going from "nothing on the disk" to "project I c
 It is deliberately not meant as a "seed project", instead going through the additions you need to the default output of
 various tools, making it easier to apply to other versions, and to customize for your purpose.
 
-This currently matches the schematics-driven installation of Angular 10.0 and onwards.
+This currently matches Angular 13+, which is not released in a final version yet, so all `npm install` or
+`ng add` commands which reference `@angular/...` packages should add `...@13.0.0-rc.2`.
 
 Prerequisites
 -------------
@@ -19,7 +20,7 @@ also come in handy.
 
 Install the Angular CLI globally:
 
-    npm install @angular/cli -g
+    npm install @angular/cli --global
     
 Since the CLI is responsible for setting up a lot of tool packages and configuration files, make sure you have the
 latest version before using it to create a project.
@@ -27,7 +28,7 @@ latest version before using it to create a project.
 Create a project
 ----------------
 
-    ng new [project-name] --prefix=[component-prefix] --style=scss --strict
+    ng new [project-name] --prefix=[component-prefix] --style=scss
     
 (**Note**: You may also want to add `--skip-git` if you use another source control system or prefer to initialize it in
 other ways).
@@ -41,15 +42,10 @@ project may be large enough to warrant its own prefix.
 
 We use [SASS](http://sass-lang.com/) as the stylesheet language, in part because it works well with Material Design.
 
-`--strict` sets up several TypeScript options which I would recommend anyway. Be aware that this also sets up your project
-as "side-effect free", which can mess up 3rd party imports if they actually do rely on side effects. Most modern
-libraries should be written in a purer style, though, so you can probably enable this, or in worst case
-[designate
- specific files as having side effects](https://webpack.js.org/guides/tree-shaking/#mark-the-file-as-side-effect-free).
-
 The installation will ask whether to add Routing functionality, adding a bit of relevant skeleton code if you choose so.  
  – I find that almost all projects benefit from the deep-linking capabilities of the router, so I'd recommend
-installing it, even if it does add a bit of mental overhead initially.
+installing it, even if it does add a bit of mental overhead initially. (This can also be added by including `--routing`)
+on the command line).
 
 Step into the newly generated folder and add Angular Material
 
@@ -95,7 +91,7 @@ To do so, add
 
     ng add @angular/localize
 
-to get access to the locale definitions (as [seen here](https://github.com/angular/angular/tree/master/packages/common/locales)).
+to get access to the locale definitions.
 
 Edit your `angular.json` file, adding
 
@@ -104,47 +100,30 @@ Edit your `angular.json` file, adding
       "projects": {
         "[project-name]": {
           "i18n": {
-            "locales": {
-              "da": {
-                "translation": "",
-                "baseHref": ""
-              }
-            }
+            "sourceLocale": "da"
           },
           ...
-          "architect": {
-            "build": {
-              ...
-              "options": {
-                "localize": ["da"],
-                ...
-              },
-              ...
-            },
-            ...
-          }
         },
         ...
       },
       ...
     }
-                 
-i.e. add the `i18n` block to the project definition, and the `"localize": ["da"]` option to the `architect/build/options`
-which serve as the default for all configurations.
-This sets up a Danish build profile which has no actual translation file, and does not modify the `baseHref`.
-(Be aware that the output folder of the compiled files will still include the locale name, e.g. `dist/da`, so copy
-the files from this deeper level when you deploy them).
+
+This will set the default `LOCALE_ID` for the project to `'da'`, making, say, the `|date` pipe use Danish names and notation. 
 
 
 Configure CSS/Material palettes
 -------------------------------
 Create a `src/theme.scss` file and move the theme definitions from `src/styles.scss` into it:
 
-    @import '~@angular/material/theming';
-    $projectname-primary: mat-palette($mat-indigo);
-    $projectname-accent: mat-palette($mat-pink, A200, A100, A400);
-    $projectname-warn: mat-palette($mat-red);
-    $projectname-theme: mat-light-theme((
+    @use '~@angular/material' as mat;
+    
+    $projectname-primary: mat.define-palette(mat.$indigo-palette);
+    $projectname-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+    
+    $projectname-warn: mat.define-palette(mat.$red-palette);
+    
+    $projectname-theme: mat.define-light-theme((
       color: (
         primary: $projectname-primary,
         accent: $projectname-accent,
@@ -166,15 +145,19 @@ can import and reuse the color/theme variables in our own components/SCSS withou
 
 Open the `src/styles.scss` and edit it to
 
+    @use '~@angular/material' as mat;
     @import "~sanitize.css/sanitize.css";
-    @import '~@angular/material/theming';
     @import "./theme";
-    @include mat-core(mat-typography-config(
-      $font-family: 'Comic Sans MS' /* Ok, perhaps not */
-    ));
-    @include angular-material-theme($projectname-theme);    
+    @include mat.core(
+      mat.define-typography-config(
+        $font-family: 'Comic Sans MS' /* Ok, perhaps not */
+      )
+    );
+    @include mat.all-component-themes($projectname-theme);
+    
     html, body { height: 100%; }
-    body { margin: 0; }
+    body { margin: 0 }
+
 
 ### mat-icon and default font
 The schematics will set up a stylesheet link to [Material Design Icons](https://material.io/icons/) in the `index.html`.
@@ -185,8 +168,8 @@ or replace it with your own if needed.
 
 Configure TypeScript
 --------------------
-The `--strict` option has already set up TypeScript to run a tight ship, but I prefer to add a bit more.
-Open the `tsconfig.base.json` file and add the following options:
+The default project settings have already set up TypeScript to run a tight ship, but I prefer to add a bit more.
+Open the `tsconfig.json` file and add the following options:
 
     {
       ...
@@ -204,8 +187,86 @@ Pragmatically, though, you will never get around to actually cleaning up such th
 writing the code initially, so this strict setting ensures that dead legacy code does not accumulate and confuse people
 later. 
 
+ESLint
+======
+...does not yet have a version for Angular 13. Description to come.
+
+
+TSLint
+======
+is now deprecated. ESLint should be used instead.
+
+Simlarly, the `tslint.json` settings are very much a matter of opinion. Options worth considering are
+[no-conditional-assignment](https://palantir.github.io/tslint/rules/no-conditional-assignment/),
+[member-access](https://palantir.github.io/tslint/rules/member-access/),
+[no-null-keyword](https://palantir.github.io/tslint/rules/no-null-keyword/),
+[no-this-assignment](https://palantir.github.io/tslint/rules/no-this-assignment/) and
+[variable-name](https://palantir.github.io/tslint/rules/variable-name/); and updating 
+[arrow-return-shorthand](https://palantir.github.io/tslint/rules/arrow-return-shorthand/),
+[semicolon](https://palantir.github.io/tslint/rules/semicolon/),
+[quotemark](https://palantir.github.io/tslint/rules/quotemark/),
+[triple-equals](https://palantir.github.io/tslint/rules/triple-equals/):
+
+    "arrow-return-shorthand": [true, "multiline"],
+    "member-access": [true, "no-public"],
+    "no-conditional-assignment": true,
+    "no-null-keyword": true,
+    "no-this-assignment": true,
+    "quotemark": [true, "single", "avoid-escape", "avoid-template"],
+    "semicolon": [true, "always", "strict-bound-class-methods"],
+    "triple-equals": [true, "allow-undefined-check"],
+    "variable-name": { "options": ["check-format", "ban-keywords", "require-const-for-all-caps", "allow-leading-underscore"]},
+
+This adopts the [TypeScript convention](https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines#null-and-undefined)
+of using `undefined` rather than `null`.
+If you need to guard against null from 3rd-party libraries, use coercing equality (`==undefined` and `!=undefined`),
+which is explicitly allowed by these rules.
+
+
+Additional tools and resources
+==============================
+Primary resources
+-----------------
+ * [Angular](https://angular.io/docs) and its [GitHub repository](https://github.com/angular/angular)
+ 
+ * [Angular Material Design](https://material.angular.io/components) and its [GitHub](https://github.com/angular/material2).
+
+Additional tools
+----------------
+The [Augury Chrome plug-in](https://augury.angular.io/) provides additional runtime inspection of a project, much like
+the development console does for "normal" HTML.
+
+Useful packages
+---------------
+ * [`moment.js`](https://momentjs.com/) is highly useful for doing date manipulation and parsing/formatting, in 
+ particular if you also need to handle time zones (using [`moment-timezone.js`](https://momentjs.com/timezone/)), and
+ it will feel familiar if you're used to Joda-Time or Java 8's date/time API.
+ * [`anchorme`](https://alexcorvi.github.io/anchorme.js/) is a "linkifier" which turns links in text into clickable
+ markup, and seems to strike a good balance between features and (ease of) configuration.
+
+
+GZip/imagemin
+=============
+Reaching back in the old bag of tricks, I use some Gulp tasks (in the `gulpfile.js`) to optimize the generated assets
+by recompressing images and pre-compressing the files, since many servers can be set up to automatically deliver the
+`.gz` or `.br` version of files if they exist and the browser supports it.
+
+To include the needed tools, run
+
+    npm install gulp@^4 gulp-imagemin@^6 gulp-gzip@^1 gulp-brotli@^1 --save-dev
+    
+Make sure to create and update the `gulpfile.js` to match your project name.
+    
+I typically add the tasks to the build script in `package.json`, so it looks something like
+
+    "build": "ng build --prod --base-href=/angular-material-kickstart/ && gulp",
+
+(The `--base-href` is there because I deploy on an application path, rather than to the root of the server).
+
 Safari session credentials for script type="module"
----------------------------------------------------
+===================================================
+_**Note:** The current status of this workaround is unknown. I have not worked with the described setup recently:_
+
 If your entire site is behind a session-based access control, the browser will need to send session cookies with the
 requests for the compiled JavaScript files. Usually, this is handled automatically, but Safari does not by default send
 credentials with requests for the `module` ES6 script type.
@@ -236,81 +297,8 @@ To work around this, edit the `angular.json` to include the `crossOrigin` option
 This adds a `crossorigin="use-credentials"` to the script tag in `index.html, per https://github.com/angular/angular-cli/issues/14743.
 
 The Safari dev team are somewhat vague about whether this is a bug and what they consider expected behavior, but given
-that it is the only browser with this interpretation, it is likely to change in the future. 
+that it is the only browser with this interpretation, it is likely to change in the future.
 
-
-TSLint
-======
-Simlarly, the `tslint.json` settings are very much a matter of opinion. Options worth considering are
-[no-conditional-assignment](https://palantir.github.io/tslint/rules/no-conditional-assignment/),
-[member-access](https://palantir.github.io/tslint/rules/member-access/),
-[no-null-keyword](https://palantir.github.io/tslint/rules/no-null-keyword/),
-[no-this-assignment](https://palantir.github.io/tslint/rules/no-this-assignment/) and
-[variable-name](https://palantir.github.io/tslint/rules/variable-name/); and updating 
-[arrow-return-shorthand](https://palantir.github.io/tslint/rules/arrow-return-shorthand/),
-[semicolon](https://palantir.github.io/tslint/rules/semicolon/),
-[quotemark](https://palantir.github.io/tslint/rules/quotemark/),
-[triple-equals](https://palantir.github.io/tslint/rules/triple-equals/):
-
-    "arrow-return-shorthand": [true, "multiline"],
-    "member-access": [true, "no-public"],
-    "no-conditional-assignment": true,
-    "no-null-keyword": true,
-    "no-this-assignment": true,
-    "quotemark": [true, "single", "avoid-escape", "avoid-template"],
-    "semicolon": [true, "always", "strict-bound-class-methods"],
-    "triple-equals": [true, "allow-undefined-check"],
-    "variable-name": { "options": ["check-format", "ban-keywords", "require-const-for-all-caps", "allow-leading-underscore"]},
-
-This adopts the [TypeScript convention](https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines#null-and-undefined)
-of using `undefined` rather than `null`.
-If you need to guard against null from 3rd-party libraries, use coercing equality (`==undefined` and `!=undefined`),
-which is explicitly allowed by these rules.
-
-
-Primary resources
------------------
- * [Angular](https://angular.io/docs) and its [GitHub repository](https://github.com/angular/angular)
- * [Angular CLI](https://cli.angular.io/) and its [GitHub repository](https://github.com/angular/angular-cli).
-   (The documentation is moving to the main Angular site, but the project's [GitHub Wiki](https://github.com/angular/angular-cli/wiki)
-   still has more information, in particular the [stories](https://github.com/angular/angular-cli/wiki/stories))
-
- * [Angular Material Design](https://material.angular.io/components) and its [GitHub](https://github.com/angular/material2).
-
-Additional tools
-----------------
-The [Augury Chrome plug-in](https://augury.angular.io/) provides additional runtime inspection of a project, much like
-the development console does for "normal" HTML.
-
-The [Angular Console](https://angularconsole.com/) is a visual facade to the Angular CLI and its `angular.json`
-configuration, which may make it easier to remember the different options, depending on your preferred style.
-
-Useful packages
----------------
- * [`moment.js`](https://momentjs.com/) is highly useful for doing date manipulation and parsing/formatting, in 
- particular if you also need to handle time zones (using [`moment-timezone.js`](https://momentjs.com/timezone/)), and
- it will feel familiar if you're used to Joda-Time or Java 8's date/time API.
- * [`anchorme`](https://alexcorvi.github.io/anchorme.js/) is a "linkifier" which turns links in text into clickable
- markup, and seems to strike a good balance between features and (ease of) configuration.
-
-
-GZip/imagemin
-=============
-Reaching back in the old bag of tricks, I use some Gulp tasks (in the `gulpfile.js`) to optimize the generated assets
-by recompressing images and pre-compressing the files, since many servers can be set up to automatically deliver the
-`.gz` or `.br` version of files if they exist and the browser supports it.
-
-To include the needed tools, run
-
-    npm install gulp@^4 gulp-imagemin@^6 gulp-gzip@^1 gulp-brotli@^1 --save-dev
-    
-Make sure to create and update the `gulpfile.js` to match your project name.
-    
-I typically add the tasks to the build script in `package.json`, so it looks something like
-
-    "build": "ng build --prod --base-href=/angular-material-kickstart/ && gulp",
-
-(The `--base-href` is there because I deploy on an application path, rather than to the root of the server).
 
 Java Deploy
 ===========
