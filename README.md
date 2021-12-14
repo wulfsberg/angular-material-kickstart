@@ -9,8 +9,7 @@ but as a cookbook/checklist for going from "nothing on the disk" to "project I c
 It is deliberately not meant as a "seed project", instead going through the additions you need to the default output of
 various tools, making it easier to apply to other versions, and to customize for your purpose.
 
-This currently matches Angular 13+, which is not released in a final version yet, so all `npm install` or
-`ng add` commands which reference `@angular/...` packages should add `...@13.0.0-rc.2`.
+This currently matches Angular 13+.
 
 Prerequisites
 -------------
@@ -46,6 +45,10 @@ The installation will ask whether to add Routing functionality, adding a bit of 
  – I find that almost all projects benefit from the deep-linking capabilities of the router, so I'd recommend
 installing it, even if it does add a bit of mental overhead initially. (This can also be added by including `--routing`)
 on the command line).
+
+Additionally, if you're installing the Angular frontend as a subfolder in another project (such as a Spring Boot project),
+you may want to change the directory name with `--directory=[name]`, e.g. ´--directory=angular` to avoid redundancy
+in the folder names and signal that this is the Angular part of the stack.
 
 Step into the newly generated folder and add Angular Material
 
@@ -187,40 +190,36 @@ Pragmatically, though, you will never get around to actually cleaning up such th
 writing the code initially, so this strict setting ensures that dead legacy code does not accumulate and confuse people
 later. 
 
+
 ESLint
 ======
-...does not yet have a version for Angular 13. Description to come.
+Install the TypeScript ESLint and Angular rules with
 
+    ng add @angular-eslint/schematics
 
-TSLint
-======
-is now deprecated. ESLint should be used instead.
+Specific linter rules are always a source of heated contention. To use a [reasonable baseline](https://www.npmjs.com/package/@northtech/eslint-config-typescript),
+install
 
-Simlarly, the `tslint.json` settings are very much a matter of opinion. Options worth considering are
-[no-conditional-assignment](https://palantir.github.io/tslint/rules/no-conditional-assignment/),
-[member-access](https://palantir.github.io/tslint/rules/member-access/),
-[no-null-keyword](https://palantir.github.io/tslint/rules/no-null-keyword/),
-[no-this-assignment](https://palantir.github.io/tslint/rules/no-this-assignment/) and
-[variable-name](https://palantir.github.io/tslint/rules/variable-name/); and updating 
-[arrow-return-shorthand](https://palantir.github.io/tslint/rules/arrow-return-shorthand/),
-[semicolon](https://palantir.github.io/tslint/rules/semicolon/),
-[quotemark](https://palantir.github.io/tslint/rules/quotemark/),
-[triple-equals](https://palantir.github.io/tslint/rules/triple-equals/):
+   npm i --save-dev @northtech/eslint-config-typescript
 
-    "arrow-return-shorthand": [true, "multiline"],
-    "member-access": [true, "no-public"],
-    "no-conditional-assignment": true,
-    "no-null-keyword": true,
-    "no-this-assignment": true,
-    "quotemark": [true, "single", "avoid-escape", "avoid-template"],
-    "semicolon": [true, "always", "strict-bound-class-methods"],
-    "triple-equals": [true, "allow-undefined-check"],
-    "variable-name": { "options": ["check-format", "ban-keywords", "require-const-for-all-caps", "allow-leading-underscore"]},
+and edit the `.eslintrc.json` file to include:
 
-This adopts the [TypeScript convention](https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines#null-and-undefined)
-of using `undefined` rather than `null`.
-If you need to guard against null from 3rd-party libraries, use coercing equality (`==undefined` and `!=undefined`),
-which is explicitly allowed by these rules.
+    {
+      ...
+      "overrides": [
+        {
+          ...
+          "extends": [
+            ...
+            "@northtech/eslint-config-typescript"
+            ],
+          ...
+        }
+        ...
+      ]
+    }
+
+You can override or set up additional rules to taste under the `rules` section of the file.
 
 
 Additional tools and resources
@@ -253,7 +252,7 @@ by recompressing images and pre-compressing the files, since many servers can be
 
 To include the needed tools, run
 
-    npm install gulp@^4 gulp-imagemin@^6 gulp-gzip@^1 gulp-brotli@^1 --save-dev
+    npm install gulp@^4 gulp-imagemin@^7 gulp-gzip@^1 gulp-brotli@^3 --save-dev
     
 Make sure to create and update the `gulpfile.js` to match your project name.
     
