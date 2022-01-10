@@ -50,6 +50,10 @@ Additionally, if you're installing the Angular frontend as a subfolder in anothe
 you may want to change the directory name with `--directory=[name]`, e.g. ´--directory=angular` to avoid redundancy
 in the folder names and signal that this is the Angular part of the stack.
 
+E.g. a complete command line could look like this:
+
+    ng new my-project --prefix=nt --style=scss --routing --skip-git --directory=angular
+
 Step into the newly generated folder and add Angular Material
 
     ng add @angular/material
