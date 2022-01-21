@@ -184,15 +184,19 @@ Open the `tsconfig.json` file and add the following options:
         ...
         "noUnusedLocals": true,
         "noUnusedParameters": true,
+        "exactOptionalPropertyTypes": true,
         ...
       }
       ...
     }
 
-This is somewhat a matter of taste. Some find this too strict, becoming an annoyance while working on the code.
+The `noUnused...` is somewhat a matter of taste. Some find this too strict, becoming an annoyance while working on the code.
 Pragmatically, though, you will never get around to actually cleaning up such things unless you do it while you're
 writing the code initially, so this strict setting ensures that dead legacy code does not accumulate and confuse people
-later. 
+later.  
+The `exactOptionalPropertyTypes` prevents you from sending an explicit `undefined` to a field/parameter marked as
+optional. In most cases there is little practical difference, but in some cases (notably when using `Partial<...>` objects)
+it is more robust to enforce the distinction. 
 
 
 ESLint
