@@ -238,6 +238,10 @@ Primary resources
  
  * [Angular Material Design](https://material.angular.io/components) and its [GitHub](https://github.com/angular/material2).
 
+Additional tools
+----------------
+The [DevTools Chrome plug-in](https://angular.io/guide/devtools) provides additional runtime inspection of a project.
+
 Useful packages
 ---------------
 * [`temporal-polyfill`](https://github.com/js-temporal/temporal-polyfill) is an implementation of the upcoming
