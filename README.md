@@ -238,11 +238,6 @@ Primary resources
  
  * [Angular Material Design](https://material.angular.io/components) and its [GitHub](https://github.com/angular/material2).
 
-Additional tools
-----------------
-The [Augury Chrome plug-in](https://augury.angular.io/) provides additional runtime inspection of a project, much like
-the development console does for "normal" HTML.
-
 Useful packages
 ---------------
 * [`temporal-polyfill`](https://github.com/js-temporal/temporal-polyfill) is an implementation of the upcoming
