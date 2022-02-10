@@ -194,9 +194,12 @@ The `noUnused...` is somewhat a matter of taste. Some find this too strict, beco
 Pragmatically, though, you will never get around to actually cleaning up such things unless you do it while you're
 writing the code initially, so this strict setting ensures that dead legacy code does not accumulate and confuse people
 later.  
-The `exactOptionalPropertyTypes` prevents you from sending an explicit `undefined` to a field/parameter marked as
-optional. In most cases there is little practical difference, but in some cases (notably when using `Partial<...>` objects)
-it is more robust to enforce the distinction. 
+The `exactOptionalPropertyTypes` makes a distinction between an optional field/parameter, and the value `undefined`.
+(Just as Typescript already differentiates between `undefined` and `null`). This prevents you from explicitly sending
+`undefined` to a field/parameter which is marked as optional, `?`.
+In most cases there is little practical difference, but in some cases (notably when using `Partial<...>` objects)
+it is more robust to enforce the distinction. This option, however, is fairly new in TypeScript, so you may run into
+dependencies which still treat "not given" and `undefined` as the same.
 
 
 ESLint
