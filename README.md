@@ -228,9 +228,20 @@ and edit the `.eslintrc.json` file to include:
         }
         ...
       ]
-    }
+    } 
 
 You can override or set up additional rules to taste under the `rules` section of the file.
+The settings in this package are fairly strict when it comes to formatting, with the assumption that you can simply
+autoformat or lint fix as you go along, with a script in the `package.json` like
+
+    {
+      ...
+      "scripts": {
+        ...
+        "lint-fix": "eslint . --ext .ts --fix"
+      }
+      ...
+    }
 
 
 Additional tools and resources
@@ -267,7 +278,14 @@ Make sure to create and update the `gulpfile.js` to match your project name.
     
 I typically add the tasks to the build script in `package.json`, so it looks something like
 
-    "build": "ng build --prod --base-href=/angular-material-kickstart/ && gulp",
+    {
+      ...
+      "scripts": {
+        ...
+        "build": "ng build --prod --base-href=/angular-material-kickstart/ && gulp"
+      }
+      ...
+    }
 
 (The `--base-href` is there because I deploy on an application path, rather than to the root of the server).
 
