@@ -81,6 +81,22 @@ so-sensible-they-are-de-facto-standard rules on top of the normalization.
 Notably, this includes using the border-box model and collapsing table borders.
 It is not needed if sticking entirely to Material components, but is still a nice help when doing other CSS work.
 
+If you do not use sanitize, I **very strongly** recommend that you set up [border-box](https://css-tricks.com/box-sizing/)
+– and likely also collapse – in
+
+`styles.scss`:
+
+    html {
+      box-sizing: border-box;
+    }
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+
+    :where(table) {
+      border-collapse: collapse;
+    }
+
 
 Enable polyfills
 ----------------
