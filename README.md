@@ -139,7 +139,7 @@ Configure CSS/Material palettes
 -------------------------------
 Create a `src/theme.scss` file and move the theme definitions from `src/styles.scss` into it:
 
-    @use '~@angular/material' as mat;
+    @use '@angular/material' as mat;
     
     $projectname-primary: mat.define-palette(mat.$indigo-palette);
     $projectname-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
@@ -168,9 +168,9 @@ can import and reuse the color/theme variables in our own components/SCSS withou
 
 Open the `src/styles.scss` and edit it to
 
-    @use '~@angular/material' as mat;
-    @import "~sanitize.css/sanitize.css";
-    @import "./theme";
+    @use '@angular/material' as mat;
+    @import 'sanitize.css';
+    @import './theme';
     @include mat.core(
       mat.define-typography-config(
         $font-family: 'Comic Sans MS' /* Ok, perhaps not */
